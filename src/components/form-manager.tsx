@@ -1,18 +1,35 @@
 import React from 'react';
 
 import 'antd/dist/antd.css'
+import {
+    Form, Input, Button, Select, ConfigProvider, DatePicker, InputNumber, Radio, Switch, Checkbox, TimePicker, Row, Col, Space, Spin, Tooltip, notification, List,
+} from "antd";
 
-import { Form, Input, Button, Checkbox } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+
+import moment from 'moment';
+
+import { IFieldType } from './field-type';
+
+import { IFieldDateTime, IFieldNumber, IFieldSelect, IField } from './field';
+
+import { Locale } from 'antd/lib/locale-provider';
+
+import enUS from 'antd/es/locale/en_US';
+
+import { IFormOptions } from './form-option';
+
+const { RangePicker } = DatePicker;
+
+const { Option } = Select;
 
 export interface DFormManagerProps {
-    size?: 'small' | 'medium' | 'large';
+    fields: any[],
+    locale? : Locale,
+    options? : IFormOptions
 }
 
-/**
- * Primary UI component for user interaction
- */
 export const DFormManager = ({
-    size = 'medium',
     ...props
 }: DFormManagerProps) => {
 
@@ -24,42 +41,8 @@ export const DFormManager = ({
         console.log('Failed:', errorInfo);
     };
     return (
-        <>
-            <Form
-                name="basic"
-                labelCol={{ span: 8 }}
-                wrapperCol={{ span: 16 }}
-                initialValues={{ remember: true }}
-                onFinish={onFinish}
-                onFinishFailed={onFinishFailed}
-                autoComplete="off"
-            >
-                <Form.Item
-                    label={size}
-                    name={size}
-                    rules={[{ required: true, message: 'Please input your username!' }]}
-                >
-                    <Input />
-                </Form.Item>
+        <ConfigProvider locale={props.locale??enUS}>
 
-                <Form.Item
-                    label="Password"
-                    name="password"
-                    rules={[{ required: true, message: 'Please input your password!' }]}
-                >
-                    <Input.Password />
-                </Form.Item>
-
-                <Form.Item name="remember" valuePropName="checked" wrapperCol={{ offset: 8, span: 16 }}>
-                    <Checkbox>Remember me</Checkbox>
-                </Form.Item>
-
-                <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
-            </Form>
-        </>
+        </ConfigProvider>
     );
 };

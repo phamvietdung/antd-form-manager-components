@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { DFormManager } from './form-manager';
+import { DFormManager } from '../components/form-manager';
 
 export default {
   title: 'Example/DFormManager',
