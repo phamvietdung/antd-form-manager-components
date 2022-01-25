@@ -39,7 +39,8 @@
     "dts": "npx -p typescript tsc src/components/index.js --declaration --allowJs --emitDeclarationOnly --outDir types",
     "clean": "rimraf dist",
     "tsc": "tsc",
-    "compile": "npm run clean && cross-env NODE_ENV=production babel src/components --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,stories.js,__snapshots__ "
+    "compile-bak": "npm run clean && cross-env NODE_ENV=production babel src/components --out-dir dist --copy-files --ignore __tests__,spec.js,test.js,stories.js,__snapshots__ ",
+    "compile": "npm tsc"
   },
   "eslintConfig": {
     "extends": [
