@@ -20,6 +20,7 @@ import { Locale } from 'antd/lib/locale-provider';
 import enUS from 'antd/es/locale/en_US';
 
 import { IFormOptions } from './form-option';
+import { IConditionFunction } from './field-condition';
 
 const { RangePicker } = DatePicker;
 
@@ -30,7 +31,7 @@ export interface DFormManagerProps {
     locale?: Locale,
     options?: IFormOptions,
     ref?: any,
-    default?: object
+    data?: object
 }
 
 const defaultOptions: IFormOptions = {
@@ -52,27 +53,90 @@ export const DFormManager = ({
 
     const { formId, setFormId,
         formRef, setFormRef,
-        fields, setFields } = useFormManagerState(props);
+        fields, setFields,
+        values, setValuesAsync } = useFormManagerState(props);
 
 
-    const onValueChange = (value: Object, values: any) => {
+    const disabledHander = (disabled: undefined | boolean | IConditionFunction) => {
+        let result = false;
+        if (typeof (disabled) == 'boolean') {
+            result = disabled;
+        }
+        else if (typeof (disabled) == 'function') {
 
+            let _values = formRef.current?.getFieldsValue();
+
+            if (_values != undefined)
+                result = disabled(_values);
+            else if (values != undefined)
+                result = disabled(values);
+        }
+        return result;
     }
 
-    const onFieldChange = () => {
+    const requiredHander = (required: undefined | boolean | IConditionFunction) => {
+        let result = false;
+        if (typeof (required) == 'boolean') {
+            result = required;
+        }
+        else if (typeof (required) == 'function') {
 
+            let _values = formRef.current?.getFieldsValue();
+
+            if (_values != undefined)
+                result = required(_values);
+            else if (values != undefined)
+                result = required(values);
+
+        }
+        return result;
+    }
+
+    const visibleHander = (visible: undefined | boolean | IConditionFunction) => {
+        let result = false;
+        if (typeof (visible) == 'boolean') {
+            result = visible;
+        }
+        else if (typeof (visible) == 'function') {
+
+            let _values = formRef.current?.getFieldsValue();
+
+            if (_values != undefined)
+                result = visible(_values);
+            else if (values != undefined)
+                result = visible(values);
+
+        }
+        return result;
+    }
+
+    const onValueChange = (value: Object, values: any) => {
+        //console.log('change');
+        setValuesAsync(values);
+    }
+
+    const onFieldChange = (value: Object, values: any) => {
+        //console.log(value,values)
     }
 
     const formItemInit = (field: IField, index: number) => {
         return {
             name: field.name,
             label: field.label,
-            key: `${index}`,
             rules: [
                 {
                     required: field.required ? true : false
                 }
-            ]
+            ],
+            required: requiredHander(field.required),
+            hidden: visibleHander(field.visible),
+        }
+    }
+
+    const fieldLayoutInit = (field: any, index: number) => {
+        return {
+            key: `${formId}-${index}`,
+            span: field.span ?? 24,
         }
     }
 
@@ -86,7 +150,8 @@ export const DFormManager = ({
                             required: "${label} " + (props.options?.rule?.message ?? defaultOptions.rule?.message),
                         }
                     }
-                    id={formId} ref={formRef} name="control-ref" initialValues={props.default ?? {}} onValuesChange={onValueChange}
+                    id={formId} ref={formRef} name="control-ref" initialValues={props.data ?? {}}
+                    onValuesChange={onValueChange}
                     onFieldsChange={onFieldChange}
                 >
                     {fields.map((field: IField, index: number) => {
@@ -94,27 +159,58 @@ export const DFormManager = ({
                         switch (field.type) {
                             case 'input':
                                 return (
-                                    <Form.Item {...formItemInit(field, index)}>
-                                        <Input placeholder={field.placeholder ?? ""}
-                                            maxLength={field.max ?? undefined}
-                                        />
-                                    </Form.Item>
+                                    <Col {...fieldLayoutInit(field, index)}>
+                                        <Form.Item {...formItemInit(field, index)}>
+                                            <Input
+                                                placeholder={field.placeholder ?? ""}
+                                                maxLength={field.max ?? undefined}
+                                                disabled={disabledHander(field.disabled)}
+                                            />
+                                        </Form.Item>
+                                    </Col>
                                 )
                             case 'password':
                                 return (
-                                    <Form.Item {...formItemInit(field, index)}>
-                                        <Input.Password placeholder={field.placeholder ?? ""}
-                                            maxLength={field.max ?? undefined}
-                                        />
-                                    </Form.Item>
+                                    <Col {...fieldLayoutInit(field, index)}  >
+                                        <Form.Item {...formItemInit(field, index)}>
+                                            <Input.Password
+                                                placeholder={field.placeholder ?? ""}
+                                                disabled={disabledHander(field.disabled)}
+                                                maxLength={field.max ?? undefined}
+                                            />
+                                        </Form.Item>
+                                    </Col>
                                 )
                             case 'textarea':
                                 return (
-                                    <Form.Item {...formItemInit(field, index)}>
-                                        <TextArea placeholder={field.placeholder ?? ""}
-                                            maxLength={field.max ?? undefined}
-                                        />
-                                    </Form.Item>
+                                    <Col {...fieldLayoutInit(field, index)}  >
+                                        <Form.Item {...formItemInit(field, index)}>
+                                            <TextArea
+                                                placeholder={field.placeholder ?? ""}
+                                                disabled={disabledHander(field.disabled)}
+                                                maxLength={field.max ?? undefined}
+                                            />
+                                        </Form.Item>
+                                    </Col>
+                                )
+                            case 'number':
+                                return (
+                                    <Col {...fieldLayoutInit(field, index)}  >
+                                        <Form.Item {...formItemInit(field, index)}>
+                                            <InputNumber
+                                                formatter={(value: any) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
+                                                parser={(value: any) => value.replace(/\$\s?|(\.*)/g, '')}
+                                                style={{ width: '100%' }}
+                                                max={field.max ?? undefined}
+                                                placeholder={field.placeholder ?? ""}
+                                                min={field.min ?? undefined}
+                                                //disabled={isDisabled(field.disabled, field.name) ?? false}
+                                                maxLength={field.max ?? undefined}
+                                                disabled={disabledHander(field.disabled)}
+                                            />
+                                        </Form.Item>
+                                    </Col>
+
                                 )
                         }
 

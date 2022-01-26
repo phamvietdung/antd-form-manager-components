@@ -11,6 +11,25 @@ export const useFormManagerState = (props : DFormManagerProps) => {
 
     const [fields, setFields] = useState<any>([]);
 
+    const [values, setValues] = useState<any>(props.data??{});
+
+    const [valuesAsync, setValuesAsync] = useState<any>({});
+
+    // useEffect(() => {
+
+    //     const timeOutId = setTimeout(() => setValues(valuesAsync), 500);
+
+    //     return () => clearTimeout(timeOutId);
+
+    // },[valuesAsync]);
+
+
+    // useEffect(() => {
+
+    //     console.log(values);
+
+    // },[values]);
+
     useEffect(() => {
 
         setFormId(NewId());
@@ -29,10 +48,15 @@ export const useFormManagerState = (props : DFormManagerProps) => {
 
     }, [props.fields])
 
+    useEffect(() => {
+        setValues(props.data??{})
+    }, [props.data])
+
     return {
         formId, setFormId,
         formRef, setFormRef,
-        fields, setFields
+        fields, setFields,
+        values, setValuesAsync
     }
 
 }

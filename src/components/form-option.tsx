@@ -6,7 +6,8 @@ type IFormOptions = {
 
     rule? : IRuleOptions,
 
-    layout? : ILayoutOptions
+    layout? : ILayoutOptions,
+
 
 }
 
