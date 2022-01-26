@@ -2,19 +2,31 @@ type IFormOptions = {
 
     select?: ISelectOptions,
 
-    datetime?: IDateTimeOptions
+    datetime?: IDateTimeOptions,
 
+    rule? : IRuleOptions,
+
+    layout? : ILayoutOptions
+
+}
+
+type IRuleOptions = {
+    message : string
 }
 
 type ISelectOptions = {
 
-    defaultId: string | "id",
+    defaultId: string,
 
-    defaultLabel: string | "value",
+    defaultLabel: string
 
 }
 
 type IDateTimeOptions = {
+
+}
+
+type ILayoutOptions = {
 
 }
 
@@ -24,6 +36,10 @@ export {
 
     ISelectOptions,
 
-    IDateTimeOptions
+    IDateTimeOptions, 
+
+    IRuleOptions,
+
+    ILayoutOptions
     
 }
