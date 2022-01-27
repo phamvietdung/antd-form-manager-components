@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import { useFormManagerState } from './hook'
 
+import { CSSTransition } from 'react-transition-group';
+import './styles.css'
 import 'antd/dist/antd.css'
 import {
     Form, Input, Button, Select, ConfigProvider, DatePicker, InputNumber, Radio, Switch, Checkbox, TimePicker, Row, Col, Space, Spin, Tooltip, notification, List, FormInstance,
@@ -21,6 +23,7 @@ import enUS from 'antd/es/locale/en_US';
 
 import { IFormOptions } from './form-option';
 import { IConditionFunction } from './field-condition';
+import { useHandler } from './handler';
 
 const { RangePicker } = DatePicker;
 
@@ -57,58 +60,9 @@ export const DFormManager = ({
         values, setValuesAsync } = useFormManagerState(props);
 
 
-    const disabledHander = (disabled: undefined | boolean | IConditionFunction) => {
-        let result = false;
-        if (typeof (disabled) == 'boolean') {
-            result = disabled;
-        }
-        else if (typeof (disabled) == 'function') {
-
-            let _values = formRef.current?.getFieldsValue();
-
-            if (_values != undefined)
-                result = disabled(_values);
-            else if (values != undefined)
-                result = disabled(values);
-        }
-        return result;
-    }
-
-    const requiredHander = (required: undefined | boolean | IConditionFunction) => {
-        let result = false;
-        if (typeof (required) == 'boolean') {
-            result = required;
-        }
-        else if (typeof (required) == 'function') {
-
-            let _values = formRef.current?.getFieldsValue();
-
-            if (_values != undefined)
-                result = required(_values);
-            else if (values != undefined)
-                result = required(values);
-
-        }
-        return result;
-    }
-
-    const visibleHander = (visible: undefined | boolean | IConditionFunction) => {
-        let result = false;
-        if (typeof (visible) == 'boolean') {
-            result = visible;
-        }
-        else if (typeof (visible) == 'function') {
-
-            let _values = formRef.current?.getFieldsValue();
-
-            if (_values != undefined)
-                result = visible(_values);
-            else if (values != undefined)
-                result = visible(values);
-
-        }
-        return result;
-    }
+    const { disabledHander,
+        requiredHander,
+        visibleHander } = useHandler(formRef, values);
 
     const onValueChange = (value: Object, values: any) => {
         //console.log('change');
@@ -130,6 +84,7 @@ export const DFormManager = ({
             ],
             required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
+            className : 'animated-field'
         }
     }
 
@@ -160,6 +115,7 @@ export const DFormManager = ({
                             case 'input':
                                 return (
                                     <Col {...fieldLayoutInit(field, index)}>
+
                                         <Form.Item {...formItemInit(field, index)}>
                                             <Input
                                                 placeholder={field.placeholder ?? ""}
@@ -167,6 +123,7 @@ export const DFormManager = ({
                                                 disabled={disabledHander(field.disabled)}
                                             />
                                         </Form.Item>
+
                                     </Col>
                                 )
                             case 'password':
@@ -212,6 +169,30 @@ export const DFormManager = ({
                                     </Col>
 
                                 )
+                            // case 'datetime':
+                            //     return (
+                            //         <Col {...fieldLayoutInit(field, index)}  >
+                            //             <Form.Item {...formItemInit(field, index)}>
+                            //                 <DatePicker 
+                            //                 showToday={true} 
+                            //                 // showTime={field.showTime ?? false}
+                            //                 disabledDate={disabledEndDate} 
+                            //                 // onChange={(value) => setEndTime(value)} 
+                            //                 // disabled={isDisabled(field.disabled, field.name) ?? false} 
+                            //                 // format={field.showTime ? INPUT_DATE_TIME_LONG_FORMAT : INPUT_DATE_TIME_SHORT_FORMAT}
+                            //                  />
+                            //             </Form.Item>
+                            //         </Col>
+                            //     );
+                            // case 'time':
+                            //     return (
+                            //         <Col  {...propsWrapperHandle(field, index)}>
+                            //             <Form.Item {...propsFormItemHandle(field)} >
+                            //                 <TimePicker {...propsItemHandle()} style={{ width: '100%' }} showNow={true} disabled={isDisabled(field.disabled, field.name) ?? false} />
+                            //             </Form.Item>
+                            //         </Col>
+
+                            //     )
                         }
 
                     })
