@@ -35,7 +35,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public",
+    "docs": "rm -r ./docs & build-storybook -s public -o ./docs",
     "dts": "npx -p typescript tsc src/components/index.js --declaration --allowJs --emitDeclarationOnly --outDir types",
     "clean": "rimraf dist",
     "tsc": "tsc",
