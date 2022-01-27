@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 import { useFormManagerState } from './hook'
 
-import { CSSTransition } from 'react-transition-group';
 import './styles.css'
 import 'antd/dist/antd.css'
 import {
     Form, Input, Button, Select, ConfigProvider, DatePicker, InputNumber, Radio, Switch, Checkbox, TimePicker, Row, Col, Space, Spin, Tooltip, notification, List, FormInstance, Typography
 } from "antd";
-const { Title } = Typography;
 
 import TextArea from 'antd/lib/input/TextArea';
 
@@ -25,6 +23,8 @@ import enUS from 'antd/es/locale/en_US';
 import { IFormOptions } from './form-option';
 import { IConditionFunction } from './field-condition';
 import { useHandler } from './handler';
+
+const { Title } = Typography;
 
 const { RangePicker } = DatePicker;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { DayOfWeek } from '../components/const'
+import { DayOfMonth, DayOfWeek, MonthOfYear, Year } from '../components/const'
 
 import { DFormManager } from '../components/form-manager';
 
@@ -65,10 +65,10 @@ const fields = [
   },
   {
     type: 'select',
-    name: 'password',
-    label: 'Date of birth',
+    name: 'day',
+    label: 'Day',
     dataSource: {
-      data: DayOfWeek('cn')
+      data: DayOfMonth()
     },
     required: true,
     span: 8
@@ -76,19 +76,10 @@ const fields = [
   },
   {
     type: 'select',
-    name: 'password',
-    label: ' ',
+    name: 'month',
+    label: 'Month',
     dataSource: {
-      data: [{
-        id: 1,
-        value: 1
-      }, {
-        id: 2,
-        value: 2
-      }, {
-        id: 3,
-        value: 3
-      }]
+      data: MonthOfYear('vn')
     },
     required: true,
     span: 8
@@ -96,19 +87,10 @@ const fields = [
   },
   {
     type: 'select',
-    name: 'password',
-    label: ' ',
+    name: 'year',
+    label: 'Year',
     dataSource: {
-      data: [{
-        id: 1,
-        value: 1
-      }, {
-        id: 2,
-        value: 2
-      }, {
-        id: 3,
-        value: 3
-      }]
+      data: Year()
     },
     required: true,
     span: 8
@@ -147,7 +129,8 @@ Primary.args = {
   options: {
     layout: 'vertical',
     styles: {
-      borderRadius: 10
+      borderRadius: 10,
+
     }
   },
 
@@ -160,7 +143,11 @@ Secondary.args = {
   options: {
     layout: 'horizontal',
     styles: {
-      borderRadius: 15
+      borderRadius: 0,
+      border: 'none',
+      borderBottom: '1px dashed #ccc',
+      outline: 'none'
+
     }
   }
 };
