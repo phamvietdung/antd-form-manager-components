@@ -1,76 +1,142 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { DayOfWeek } from '../components/const'
 
 import { DFormManager } from '../components/form-manager';
 
 import viVn from 'antd/es/locale/vi_VN'
 
 import zhCN from 'antd/es/locale/zh_CN';
+import { Divider, Typography } from 'antd';
+const { Title, Text, Link } = Typography;
 
 export default {
   title: 'Example/DFormManager',
   component: DFormManager,
-  // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
-  //   argTypes: {
-  //     backgroundColor: { control: 'color' },
-  //   },
 } as ComponentMeta<typeof DFormManager>;
 
-// More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
 const Template: ComponentStory<typeof DFormManager> = (args) => <DFormManager {...args} />;
 
+const fields = [
+  {
+    type: 'heading',
+    label: <>
+      <Title level={3}>Sign Up</Title>
+      <Text>It's quick and easy.</Text>
+      <Divider />
+    </>,
+    align: 'left'
+  },
+  {
+    type: 'input',
+    name: 'firstName',
+    label: 'First name',
+    required: true,
+    span: 12
+  },
+  {
+    type: 'input',
+    name: 'surName',
+    label: 'Surmame',
+    required: false,
+    span: 12
+  },
+  {
+    type: 'input',
+    name: 'mobileOrEmail',
+    required: true,
+    label: 'Mobile number or email address',
+    // span : 6
+  },
+  {
+    type: 'password',
+    name: 'password',
+    label: 'New password',
+    required: true,
+  },
+  {
+    type: 'heading',
+    label: <>
+      <Text>
+        By clicking Sign Up, you agree to our <Link>Terms</Link>, <Link>Data Policy</Link> and <Link>Cookie Policy</Link>. You may receive SMS notifications from us and can opt out at any time.
+      </Text>
+    </>,
+    align: 'left'
+  },
+  {
+    type: 'select',
+    name: 'password',
+    label: 'Date of birth',
+    dataSource: {
+      data: DayOfWeek('cn')
+    },
+    required: true,
+    span: 8
+
+  },
+  {
+    type: 'select',
+    name: 'password',
+    label: ' ',
+    dataSource: {
+      data: [{
+        id: 1,
+        value: 1
+      }, {
+        id: 2,
+        value: 2
+      }, {
+        id: 3,
+        value: 3
+      }]
+    },
+    required: true,
+    span: 8
+
+  },
+  {
+    type: 'select',
+    name: 'password',
+    label: ' ',
+    dataSource: {
+      data: [{
+        id: 1,
+        value: 1
+      }, {
+        id: 2,
+        value: 2
+      }, {
+        id: 3,
+        value: 3
+      }]
+    },
+    required: true,
+    span: 8
+
+  },
+  // {
+  //   type: 'number',
+  //   name: 'e',
+  //   label: 'akhahsd',
+  //   visible : (values : any) => {
+  //     if(values.a == 'hehe') return true;
+  //     return false;
+  //   }
+  // },
+  // {
+  //   type: 'datetime',
+  //   name: 'f',
+  //   label: 'akhahsd',
+  //   visible : (values : any) => {
+  //     if(values.a == 'hehe') return true;
+  //     return false;
+  //   }
+  // }
+]
+
 export const Primary = Template.bind({});
-// More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
-  fields: [
-    {
-      type: 'input',
-      name: 'a',
-      label: 'akhahsd',
-      required: false
-    },
-    {
-      type: 'password',
-      name: 'b',
-      label: 'akhahsd',
-      required : (values : any) => {
-        if(values.a == 'hehe') return true;
-        return false;
-      },
-    },
-    {
-      type: 'textarea',
-      name: 'c',
-      //dependencies : ['a'],
-      disabled : (values : any) => {
-        if(values.a == 'hehehe') return true;
-        return false;
-      },
-      required : (values : any) => {
-        if(values.a == 'haha') return true;
-        return false;
-      },
-      label: 'akhahsd'
-    },
-    {
-      type: 'number',
-      name: 'd',
-      label: 'akhahsd',
-      disabled : (values : any) => {
-        if(values.a == 'hehe') return true;
-        return false;
-      }
-    },
-    {
-      type: 'number',
-      name: 'e',
-      label: 'akhahsd',
-      visible : (values : any) => {
-        if(values.a == 'hehe') return true;
-        return false;
-      }
-    }
-  ],
+  fields: fields,
   data: {
     a: "hehe",
     b: "bubu",
@@ -78,10 +144,37 @@ Primary.args = {
     d: 123123.22
   },
   locale: viVn,
+  options: {
+    layout: 'vertical',
+    styles: {
+      borderRadius: 10
+    }
+  },
+
 };
 
 export const Secondary = Template.bind({});
 Secondary.args = {
-  fields: [],
-  locale: zhCN
+  fields: fields,
+  locale: zhCN,
+  options: {
+    layout: 'horizontal',
+    styles: {
+      borderRadius: 15
+    }
+  }
 };
+
+export const Third = Template.bind({});
+Third.args = {
+  fields: fields,
+  locale: zhCN,
+  options: {
+    layout: 'inline',
+    styles: {
+      borderRadius: 20
+    }
+  }
+};
+
+

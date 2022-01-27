@@ -4,7 +4,13 @@ import { IConditionFunction, IDataSource } from "./field-condition";
 
 import { IFieldType } from "./field-type";
 
-interface IFieldBase {
+interface IFieldHeading {
+    type: IFieldType,
+    label: string | React.ReactNode,
+    align? : 'left' | 'right' | 'center'
+}
+
+interface IFieldBase extends IFieldCondition {
 
     type: IFieldType,
 
@@ -16,21 +22,25 @@ interface IFieldBase {
 
     rules?: (fields: any) => Rule[],
 
+    placeholder?: string,
+
+    span? :number
+
 }
 
-interface IFieldLengthValidator{
+interface IFieldLengthValidator {
 
     min?: number,
 
-    max? : number,
+    max?: number,
 }
 
-interface IFieldCondition{
-    
+interface IFieldCondition {
+
     dependencies?: string[],
 
     required?: IConditionFunction | boolean,
-    
+
     disabled?: IConditionFunction | boolean,
 
     visible?: IConditionFunction | boolean,
@@ -47,7 +57,7 @@ interface IFieldLayout {
 
 }
 
-interface IFieldSelect {
+interface IFieldSelect extends IFieldBase {
 
     dataSource?: IDataSource,
 
@@ -59,26 +69,25 @@ interface IFieldSelect {
 
 }
 
-interface IFieldNumber extends IFieldBase, IFieldCondition, IFieldLengthValidator {
+interface IFieldNumber extends IFieldBase, IFieldLengthValidator {
 
 }
 
-interface IFieldDateTime extends IFieldBase, IFieldCondition {
-
+interface IFieldDateTime extends IFieldBase {
     showTime?: boolean,
     isNow?: boolean,
-
+    showToday?: boolean,
 }
 
-interface IField extends IFieldBase, IFieldCondition, IFieldLengthValidator {
+interface IField extends IFieldBase, IFieldLengthValidator {
 
     format?: string,
 
-    placeholder?: string, 
 }
 
 export {
     IField,
+    IFieldHeading,
     IFieldNumber,
     IFieldDateTime,
     IFieldSelect,

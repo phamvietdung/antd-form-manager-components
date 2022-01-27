@@ -1,3 +1,5 @@
+import { FormLayout } from "antd/lib/form/Form"
+
 type IFormOptions = {
 
     select?: ISelectOptions,
@@ -6,7 +8,9 @@ type IFormOptions = {
 
     rule? : IRuleOptions,
 
-    layout? : ILayoutOptions,
+    layout? : FormLayout,
+
+    styles? : React.CSSProperties
 
 
 }
