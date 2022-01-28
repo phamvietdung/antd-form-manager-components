@@ -10,7 +10,7 @@ type IFormOptions = {
 
     layout? : FormLayout,
 
-    styles? : React.CSSProperties
+    //styles? : React.CSSProperties
 
 
 }

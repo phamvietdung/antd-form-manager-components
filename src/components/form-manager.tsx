@@ -2,8 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import { useFormManagerState } from './hook'
 
-import './styles.css'
+import DateTimeGroup from './form-items/datetime-group';
+
+
 import 'antd/dist/antd.css'
+
+import './styles.css'
+
 import {
     Form, Input, Button, Select, ConfigProvider, DatePicker, InputNumber, Radio, Switch, Checkbox, TimePicker, Row, Col, Space, Spin, Tooltip, notification, List, FormInstance, Typography
 } from "antd";
@@ -18,11 +23,12 @@ import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldH
 
 import { Locale } from 'antd/lib/locale-provider';
 
-import enUS from 'antd/es/locale/en_US';
+
 
 import { IFormOptions } from './form-option';
 import { IConditionFunction } from './field-condition';
 import { useHandler } from './handler';
+import { SetStyles, GetStyles, GetStyleName, IUIType, GetLocale, SetLocale, ILocale } from './const';
 
 const { Title } = Typography;
 
@@ -32,10 +38,11 @@ const { Option } = Select;
 
 export interface DFormManagerProps {
     fields: any[],
-    locale?: Locale,
+    locale?: ILocale,
     options?: IFormOptions,
     ref?: any,
-    data?: object
+    data?: object,
+    style?: IUIType
 }
 
 const defaultOptions: IFormOptions = {
@@ -55,6 +62,11 @@ const defaultOptions: IFormOptions = {
 export const DFormManager = ({
     ...props
 }: DFormManagerProps) => {
+
+    if (props.style != undefined)
+        SetStyles(props.style);
+    if (props.locale != undefined)
+        SetLocale(props.locale);
 
     const { formId, setFormId,
         formRef, setFormRef,
@@ -81,8 +93,59 @@ export const DFormManager = ({
             label: field.label,
             rules: [
                 {
-                    required: field.required ? true : false
-                }
+                    required: field.required ? true : false,
+
+                },
+                ({ getFieldValue }: any) => ({
+                    validator(_: any, value: any) {
+
+                        if (field.validator == undefined)
+                            return Promise.resolve();
+
+                        if (field.validator(getFieldValue(), value))
+                            return Promise.resolve();
+                        else
+                            return Promise.reject(field.validatorMessage ?? "Validator error!");
+                        //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
+                    },
+                    //message: field.validatorMessage ?? "Validator error"
+                })
+            ],
+            required: requiredHander(field.required),
+            hidden: visibleHander(field.visible),
+            className: 'animated-field'
+        }
+    }
+
+    const formItemInitDob = (field: IFieldBase, index: number) => {
+        return {
+            name: field.name,
+            label: field.label,
+            rules: [
+                ({ getFieldValue }: any) => ({
+                    validator(_: any, value: any) {
+
+                        if (field.required == true) {
+                            if (value.date == undefined
+                                || value.month == undefined
+                                || value.year == undefined
+                                || value.date.trim() == ""
+                                || value.month.trim() == ""
+                                || value.year.trim() == "")
+                                return Promise.reject(field.validatorMessage ?? "Validator error!");
+                        }
+
+                        if (field.validator == undefined)
+                            return Promise.resolve();
+
+                        if (field.validator(getFieldValue(), value))
+                            return Promise.resolve();
+                        else
+                            return Promise.reject(field.validatorMessage ?? "Validator error!");
+                        //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
+                    },
+                    //message: field.validatorMessage ?? "Validator error"
+                })
             ],
             required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
@@ -97,10 +160,14 @@ export const DFormManager = ({
         }
     }
 
+    const stylesInit = () => {
+        return GetStyles();
+    }
+
 
     return (
         formRef != undefined ?
-            <ConfigProvider locale={props.locale ?? enUS}>
+            <ConfigProvider locale={GetLocale()}>
                 <Form
                     validateMessages={
                         {
@@ -111,6 +178,7 @@ export const DFormManager = ({
                     id={formId} ref={formRef} name="control-ref" initialValues={props.data ?? {}}
                     onValuesChange={onValueChange}
                     onFieldsChange={onFieldChange}
+                    className={GetStyleName()}
                 >
                     <Row gutter={16}>
                         {fields.map((_field: IField, index: number) => {
@@ -141,7 +209,7 @@ export const DFormManager = ({
 
                                                 <Form.Item {...formItemInit(field, index)}>
                                                     <Input
-                                                        style={props.options?.styles}
+                                                        style={stylesInit()}
                                                         placeholder={field.placeholder ?? ""}
                                                         maxLength={field.max ?? undefined}
                                                         disabled={disabledHander(field.disabled)}
@@ -159,7 +227,7 @@ export const DFormManager = ({
                                             <Col {...fieldLayoutInit(field, index)}  >
                                                 <Form.Item {...formItemInit(field, index)}>
                                                     <Input.Password
-                                                        style={props.options?.styles}
+                                                        style={stylesInit()}
                                                         placeholder={field.placeholder ?? ""}
                                                         disabled={disabledHander(field.disabled)}
                                                         maxLength={field.max ?? undefined}
@@ -176,7 +244,7 @@ export const DFormManager = ({
                                             <Col {...fieldLayoutInit(field, index)}  >
                                                 <Form.Item {...formItemInit(field, index)}>
                                                     <TextArea
-                                                        style={props.options?.styles}
+                                                        style={stylesInit()}
                                                         placeholder={field.placeholder ?? ""}
                                                         disabled={disabledHander(field.disabled)}
                                                         maxLength={field.max ?? undefined}
@@ -193,7 +261,7 @@ export const DFormManager = ({
                                             <Col {...fieldLayoutInit(field, index)}  >
                                                 <Form.Item {...formItemInit(field, index)}>
                                                     <InputNumber
-                                                        style={props.options?.styles}
+                                                        style={stylesInit()}
                                                         formatter={(value: any) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
                                                         parser={(value: any) => value.replace(/\$\s?|(\.*)/g, '')}
                                                         max={field.max ?? undefined}
@@ -216,13 +284,28 @@ export const DFormManager = ({
                                             <Col {...fieldLayoutInit(field, index)}  >
                                                 <Form.Item {...formItemInit(field, index)}>
                                                     <DatePicker
-                                                        style={props.options?.styles}
+                                                        style={stylesInit()}
                                                         showToday={field.showToday ?? false}
                                                         showTime={field.showTime ?? false}
                                                         placeholder={field.placeholder ?? ""}
                                                         //disabledDate={} 
                                                         disabled={disabledHander(field.disabled)}
                                                     //format={field.showTime ? INPUT_DATE_TIME_LONG_FORMAT : INPUT_DATE_TIME_SHORT_FORMAT} 
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                        )
+                                    }
+                                case 'datetime-group':
+                                    {
+                                        let field = _field as IFieldDateTime;
+                                        return (
+                                            <Col {...fieldLayoutInit(field, index)}  >
+                                                <Form.Item {...formItemInitDob(field, index)}>
+                                                    <DateTimeGroup
+                                                        style={stylesInit()}
+                                                        name={field.name}
+                                                        disabled={disabledHander(field.disabled)}
                                                     />
                                                 </Form.Item>
                                             </Col>
@@ -237,7 +320,7 @@ export const DFormManager = ({
                                                     <Select
                                                         disabled={disabledHander(field.disabled)}
                                                         showSearch
-                                                        style={props.options?.styles}
+                                                        style={stylesInit()}
                                                         placeholder={field.placeholder ?? ""}
                                                         defaultActiveFirstOption={false}
                                                         optionFilterProp="children"
@@ -250,7 +333,9 @@ export const DFormManager = ({
                                                             field.dataSource != undefined
                                                             && field.dataSource!.data != undefined
                                                             && field.dataSource!.data!.map((select_data: any, select_index: any) => (
-                                                                <Option value={field.dataSource!.id !== undefined ? select_data[field.dataSource!.id] : select_data['id']} key={`${formId}-fields-${field.name}-${index}-${select_index}`}>
+                                                                <Option
+                                                                    value={field.dataSource!.id !== undefined ? select_data[field.dataSource!.id] : select_data['id']}
+                                                                    key={`${formId}-fields-${field.name}-${index}-${select_index}`}>
                                                                     {field.dataSource!.label !== undefined ? select_data[field.dataSource!.label] : select_data['value']}
                                                                 </Option>
                                                             ))
@@ -260,36 +345,36 @@ export const DFormManager = ({
                                             </Col>
                                         )
                                     }
-                                // case 'datetime':
-                                //     return (
-                                //         <Col {...fieldLayoutInit(field, index)}  >
-                                //             <Form.Item {...formItemInit(field, index)}>
-                                //                 <DatePicker
-                                //                 showToday={true}
-                                //                 // showTime={field.showTime ?? false}
-                                //                 disabledDate={disabledEndDate}
-                                //                 // onChange={(value) => setEndTime(value)}
-                                //                 // disabled={isDisabled(field.disabled, field.name) ?? false}
-                                //                 // format={field.showTime ? INPUT_DATE_TIME_LONG_FORMAT : INPUT_DATE_TIME_SHORT_FORMAT}
-                                //                  />
-                                //             </Form.Item>
-                                //         </Col>
-                                //     );
-                                // case 'time':
-                                //     return (
-                                //         <Col  {...propsWrapperHandle(field, index)}>
-                                //             <Form.Item {...propsFormItemHandle(field)} >
-                                //                 <TimePicker {...propsItemHandle()} style={{ width: '100%' }} showNow={true} disabled={isDisabled(field.disabled, field.name) ?? false} />
-                                //             </Form.Item>
-                                //         </Col>
-
-                                //     )
+                                case 'radio':
+                                    {
+                                        let field = _field as IFieldSelect;
+                                        return (
+                                            <Col {...fieldLayoutInit(field, index)}  >
+                                                <Form.Item {...formItemInit(field, index)}>
+                                                    <Radio.Group
+                                                        // style={stylesInit()}
+                                                        options={[
+                                                            { label: 'Female', value: 'female' },
+                                                            { label: 'Male', value: 'male' }
+                                                        ]}
+                                                        //onChange={this.onChange4}
+                                                        //value={value4}
+                                                        optionType="button"
+                                                        buttonStyle="solid"
+                                                    />
+                                                </Form.Item>
+                                            </Col>
+                                        )
+                                    }
                             }
 
                         })
                         }
                     </Row>
                 </Form>
+                <code>
+                    {JSON.stringify(values)}
+                </code>
 
             </ConfigProvider>
             : <></>

@@ -18,7 +18,7 @@
  *
  */
 export type IFieldType = 'input' | 'password' | 'textarea' | 'autoComplete'
-| 'datetime' | 'datetimeRange' | 'time' 
+| 'datetime' | 'datetimeRange' | 'time' | 'datetime-group'
 | 'number'  | 'money'
 | 'select' | 'select2' | 'selectMultiple'
 | 'heading' 

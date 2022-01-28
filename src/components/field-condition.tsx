@@ -13,3 +13,5 @@ export interface IDataSource {
 export type IDataRemote = (search?: string, id?: any, deps?: any, page?: number) => Promise<any>;
 
 export type IConditionFunction = (obj: Object) => boolean;
+
+export type IConditionWithCurrentValueFunction = (obj: Object, current : any) => boolean;

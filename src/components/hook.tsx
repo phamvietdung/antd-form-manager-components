@@ -15,20 +15,20 @@ export const useFormManagerState = (props : DFormManagerProps) => {
 
     const [valuesAsync, setValuesAsync] = useState<any>({});
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     const timeOutId = setTimeout(() => setValues(valuesAsync), 500);
+        const timeOutId = setTimeout(() => setValues(valuesAsync), 500);
 
-    //     return () => clearTimeout(timeOutId);
+        return () => clearTimeout(timeOutId);
 
-    // },[valuesAsync]);
+    },[valuesAsync]);
 
 
-    // useEffect(() => {
+    useEffect(() => {
 
-    //     console.log(values);
+        //console.log(values);
 
-    // },[values]);
+    },[values]);
 
     useEffect(() => {
 

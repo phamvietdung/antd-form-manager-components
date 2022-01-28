@@ -1,13 +1,13 @@
 import { Rule } from "antd/lib/form";
 
-import { IConditionFunction, IDataSource } from "./field-condition";
+import { IConditionFunction, IConditionWithCurrentValueFunction, IDataSource } from "./field-condition";
 
 import { IFieldType } from "./field-type";
 
 interface IFieldHeading {
     type: IFieldType,
     label: string | React.ReactNode,
-    align? : 'left' | 'right' | 'center'
+    align?: 'left' | 'right' | 'center'
 }
 
 interface IFieldBase extends IFieldCondition {
@@ -24,7 +24,7 @@ interface IFieldBase extends IFieldCondition {
 
     placeholder?: string,
 
-    span? :number
+    span?: number
 
 }
 
@@ -44,6 +44,10 @@ interface IFieldCondition {
     disabled?: IConditionFunction | boolean,
 
     visible?: IConditionFunction | boolean,
+
+    validator?: IConditionWithCurrentValueFunction,
+
+    validatorMessage?: string
 
 }
 

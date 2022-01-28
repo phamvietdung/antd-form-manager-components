@@ -1,6 +1,6 @@
 import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import { DayOfMonth, DayOfWeek, MonthOfYear, Year } from '../components/const'
+import { DayOfMonth, DayOfWeek, MonthOfYear, Year, SetStyles, GetStyles } from '../components/const'
 
 import { DFormManager } from '../components/form-manager';
 
@@ -53,6 +53,68 @@ const fields = [
     name: 'password',
     label: 'New password',
     required: true,
+    span: 12
+  },
+  {
+    type: 'password',
+    name: 'passwordConfirm',
+    label: 'New password again',
+    required: true,
+    span: 12,
+    validator: (values: any, current: any) => {
+      console.log(values.password, current)
+      if (values.password == current) return true;
+      return false;
+    },
+    validatorMessage: "The password do not match"
+  },
+
+  // {
+  //   type: 'select',
+  //   name: 'day',
+  //   label: 'Day',
+  //   dataSource: {
+  //     data: DayOfMonth()
+  //   },
+  //   required: true,
+  //   span: 8
+
+  // },
+  // {
+  //   type: 'select',
+  //   name: 'month',
+  //   label: 'Month',
+  //   dataSource: {
+  //     data: MonthOfYear()
+  //   },
+  //   required: true,
+  //   span: 8
+
+  // },
+  // {
+  //   type: 'select',
+  //   name: 'year',
+  //   label: 'Year',
+  //   dataSource: {
+  //     data: Year()
+  //   },
+  //   required: true,
+  //   span: 8
+
+  // },
+  {
+    type: 'radio',
+    name: 'gender',
+    label: 'Gender',
+    required: true,
+
+  },
+  {
+    type: 'datetime-group',
+    name: 'dob',
+    label: 'Date of birth',
+    required: true,
+
   },
   {
     type: 'heading',
@@ -62,39 +124,6 @@ const fields = [
       </Text>
     </>,
     align: 'left'
-  },
-  {
-    type: 'select',
-    name: 'day',
-    label: 'Day',
-    dataSource: {
-      data: DayOfMonth()
-    },
-    required: true,
-    span: 8
-
-  },
-  {
-    type: 'select',
-    name: 'month',
-    label: 'Month',
-    dataSource: {
-      data: MonthOfYear('vn')
-    },
-    required: true,
-    span: 8
-
-  },
-  {
-    type: 'select',
-    name: 'year',
-    label: 'Year',
-    dataSource: {
-      data: Year()
-    },
-    required: true,
-    span: 8
-
   },
   // {
   //   type: 'number',
@@ -116,52 +145,37 @@ const fields = [
   // }
 ]
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const DefaultSetting = Template.bind({});
+DefaultSetting.args = {
   fields: fields,
-  data: {
-    a: "hehe",
-    b: "bubu",
-    c: "123",
-    d: 123123.22
-  },
-  locale: viVn,
+  locale: 'vn',
   options: {
     layout: 'vertical',
-    styles: {
-      borderRadius: 10,
 
-    }
   },
+  style: 'rounded'
 
 };
 
-export const Secondary = Template.bind({});
-Secondary.args = {
+export const DashedSetting = Template.bind({});
+DashedSetting.args = {
   fields: fields,
-  locale: zhCN,
+  locale: 'cn',
   options: {
     layout: 'horizontal',
-    styles: {
-      borderRadius: 0,
-      border: 'none',
-      borderBottom: '1px dashed #ccc',
-      outline: 'none'
 
-    }
-  }
+  },
+  style: 'circle'
+ 
 };
 
-export const Third = Template.bind({});
-Third.args = {
+export const InlineSetting = Template.bind({});
+InlineSetting.args = {
   fields: fields,
-  locale: zhCN,
   options: {
-    layout: 'inline',
-    styles: {
-      borderRadius: 20
-    }
-  }
+    layout: 'horizontal',
+  },
+  style: 'dashed'
 };
 
 
