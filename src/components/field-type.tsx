@@ -17,7 +17,7 @@
  * @property {string} multipleValue
  *
  */
-export type IFieldType = 'input' | 'password' | 'textarea' | 'autoComplete'
+export type IFieldType = 'input' | 'password' | 'textarea' | 'autoComplete' | 'editor'
 | 'datetime' | 'datetimeRange' | 'time' | 'datetime-group'
 | 'number'  | 'money'
 | 'select' | 'select2' | 'selectMultiple'

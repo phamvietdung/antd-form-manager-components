@@ -4,6 +4,10 @@ import { useFormManagerState } from './hook'
 
 import DateTimeGroup from './form-items/datetime-group';
 
+import { Editor } from "react-draft-wysiwyg";
+
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+
 
 import 'antd/dist/antd.css'
 
@@ -364,6 +368,43 @@ export const DFormManager = ({
                                                     />
                                                 </Form.Item>
                                             </Col>
+                                        )
+                                    }
+                                case 'editor':
+                                    {
+                                        let field = _field as IFieldSelect;
+                                        return (
+                                            <Col {...fieldLayoutInit(field, index)}  >
+                                                <Form.Item {...formItemInit(field, index)}>
+                                                    <Editor toolbar={
+                                                        {
+                                                            options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
+                                                            emoji: {
+                                                                //icon: emoji,
+                                                                className: undefined,
+                                                                component: undefined,
+                                                                popupClassName: undefined,
+                                                                emojis: [
+                                                                  '😀', 
+                                                                  {code: ':)', res: 'https://i.imgur.com/BxiNNi6.jpeg'},
+                                                                //   '😁', '😂', '😃', '😉', '😋', '😎', '😍', '😗', '🤗', '🤔', '😣', '😫', '😴', '😌', '🤓',
+                                                                //   '😛', '😜', '😠', '😇', '😷', '😈', '👻', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '🙈',
+                                                                //   '🙉', '🙊', '👼', '👮', '🕵', '💂', '👳', '🎅', '👸', '👰', '👲', '🙍', '🙇', '🚶', '🏃', '💃',
+                                                                //   '⛷', '🏂', '🏌', '🏄', '🚣', '🏊', '⛹', '🏋', '🚴', '👫', '💪', '👈', '👉', '👉', '👆', '🖕',
+                                                                //   '👇', '🖖', '🤘', '🖐', '👌', '👍', '👎', '✊', '👊', '👏', '🙌', '🙏', '🐵', '🐶', '🐇', '🐥',
+                                                                //   '🐸', '🐌', '🐛', '🐜', '🐝', '🍉', '🍄', '🍔', '🍤', '🍨', '🍪', '🎂', '🍰', '🍾', '🍷', '🍸',
+                                                                //   '🍺', '🌍', '🚑', '⏰', '🌙', '🌝', '🌞', '⭐', '🌟', '🌠', '🌨', '🌩', '⛄', '🔥', '🎄', '🎈',
+                                                                //   '🎉', '🎊', '🎁', '🎗', '🏀', '🏈', '🎲', '🔇', '🔈', '📣', '🔔', '🎵', '🎷', '💰', '🖊', '📅',
+                                                                //   '✅', '❎', '💯',
+                                                                ],
+                                                              },
+                                                        }
+
+
+                                                    } />
+                                                </Form.Item>
+                                            </Col>
+
                                         )
                                     }
                             }

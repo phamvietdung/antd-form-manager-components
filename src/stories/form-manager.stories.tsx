@@ -125,6 +125,15 @@ const fields = [
     </>,
     align: 'left'
   },
+  {
+    type: 'editor',
+    name: 'description',
+    label: 'Description about yourself',
+    visible: (values: any) => {
+      if (values.firstName == 'hehe') return true;
+      return false;
+    }
+  }
   // {
   //   type: 'number',
   //   name: 'e',
@@ -166,7 +175,7 @@ DashedSetting.args = {
 
   },
   style: 'circle'
- 
+
 };
 
 export const InlineSetting = Template.bind({});
