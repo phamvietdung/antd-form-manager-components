@@ -116,6 +116,17 @@ const fields = [
     required: true,
 
   },
+  
+  {
+    type: 'editor',
+    name: 'description',
+    label: 'Description about yourself',
+    required : true,
+    visible: (values: any) => {
+      if (values.firstName == 'hehe') return true;
+      return false;
+    }
+  },
   {
     type: 'heading',
     label: <>
@@ -125,15 +136,6 @@ const fields = [
     </>,
     align: 'left'
   },
-  {
-    type: 'editor',
-    name: 'description',
-    label: 'Description about yourself',
-    visible: (values: any) => {
-      if (values.firstName == 'hehe') return true;
-      return false;
-    }
-  }
   // {
   //   type: 'number',
   //   name: 'e',
@@ -184,7 +186,7 @@ InlineSetting.args = {
   options: {
     layout: 'horizontal',
   },
-  style: 'dashed'
+  style: 'rounded'
 };
 
 

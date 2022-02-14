@@ -8,7 +8,6 @@ import { Editor } from "react-draft-wysiwyg";
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
-
 import 'antd/dist/antd.css'
 
 import './styles.css'
@@ -27,7 +26,7 @@ import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldH
 
 import { Locale } from 'antd/lib/locale-provider';
 
-
+import ReactDraftOption from './react-draft-wysiwyg/options'
 
 import { IFormOptions } from './form-option';
 import { IConditionFunction } from './field-condition';
@@ -119,6 +118,41 @@ export const DFormManager = ({
             hidden: visibleHander(field.visible),
             className: 'animated-field'
         }
+    }
+
+    const formItemEditor = (field: IFieldBase, index: number) => {
+        return {
+            name: field.name,
+            label: field.label,
+            required: requiredHander(field.required),
+            hidden: visibleHander(field.visible),
+            className: 'animated-field',
+            rules: [
+                ({ getFieldValue }: any) => ({
+                    validator(_: any, value: any) {
+
+                        if (field.required == true) {
+                            //console.log(value.blocks);
+                            if (value.blocks == undefined
+                                || value.blocks.filter((x: any) => x.text != "") == 0)
+                                return Promise.reject(field.validatorMessage ?? "Validator error!");
+
+                        }
+
+                        if (field.validator == undefined)
+                            return Promise.resolve();
+
+                        if (field.validator(getFieldValue(), value))
+                            return Promise.resolve();
+                        else
+                            return Promise.reject(field.validatorMessage ?? "Validator error!");
+                        //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
+                    }
+                    //message: field.validatorMessage ?? "Validator error"
+                })
+            ]
+        }
+
     }
 
     const formItemInitDob = (field: IFieldBase, index: number) => {
@@ -375,33 +409,14 @@ export const DFormManager = ({
                                         let field = _field as IFieldSelect;
                                         return (
                                             <Col {...fieldLayoutInit(field, index)}  >
-                                                <Form.Item {...formItemInit(field, index)}>
+                                                <Form.Item {...formItemEditor(field, index)}>
                                                     <Editor toolbar={
-                                                        {
-                                                            options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'emoji', 'image', 'remove', 'history'],
-                                                            emoji: {
-                                                                //icon: emoji,
-                                                                className: undefined,
-                                                                component: undefined,
-                                                                popupClassName: undefined,
-                                                                emojis: [
-                                                                  '😀', 
-                                                                  {code: ':)', res: 'https://i.imgur.com/BxiNNi6.jpeg'},
-                                                                //   '😁', '😂', '😃', '😉', '😋', '😎', '😍', '😗', '🤗', '🤔', '😣', '😫', '😴', '😌', '🤓',
-                                                                //   '😛', '😜', '😠', '😇', '😷', '😈', '👻', '😺', '😸', '😹', '😻', '😼', '😽', '🙀', '🙈',
-                                                                //   '🙉', '🙊', '👼', '👮', '🕵', '💂', '👳', '🎅', '👸', '👰', '👲', '🙍', '🙇', '🚶', '🏃', '💃',
-                                                                //   '⛷', '🏂', '🏌', '🏄', '🚣', '🏊', '⛹', '🏋', '🚴', '👫', '💪', '👈', '👉', '👉', '👆', '🖕',
-                                                                //   '👇', '🖖', '🤘', '🖐', '👌', '👍', '👎', '✊', '👊', '👏', '🙌', '🙏', '🐵', '🐶', '🐇', '🐥',
-                                                                //   '🐸', '🐌', '🐛', '🐜', '🐝', '🍉', '🍄', '🍔', '🍤', '🍨', '🍪', '🎂', '🍰', '🍾', '🍷', '🍸',
-                                                                //   '🍺', '🌍', '🚑', '⏰', '🌙', '🌝', '🌞', '⭐', '🌟', '🌠', '🌨', '🌩', '⛄', '🔥', '🎄', '🎈',
-                                                                //   '🎉', '🎊', '🎁', '🎗', '🏀', '🏈', '🎲', '🔇', '🔈', '📣', '🔔', '🎵', '🎷', '💰', '🖊', '📅',
-                                                                //   '✅', '❎', '💯',
-                                                                ],
-                                                              },
-                                                        }
+                                                        ReactDraftOption.toolbar
+                                                    }
 
+                                                        editorStyle={ReactDraftOption.editorStyle}
+                                                        toolbarStyle={ReactDraftOption.toolbarStyle} />
 
-                                                    } />
                                                 </Form.Item>
                                             </Col>
 
