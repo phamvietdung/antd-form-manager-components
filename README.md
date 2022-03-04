@@ -14,7 +14,10 @@ In the your project directory, you can run:
 
 Once it install, let do some fun
 
+#### Input 
+
 ```js
+
 const simple_form = [
   {
     type: 'heading',
@@ -40,10 +43,15 @@ const simple_form = [
     span: 12
   },
 ]
-`
- ![sample 1](/assets/images/sample-1.gif)
+```
 
-`js
+#### Result
+
+![sample1](./assets/images/sample-1.gif)
+
+#### With custom validator
+
+```js
 const simple_form_validator = [
   {
     type: 'heading',
@@ -74,11 +82,15 @@ const simple_form_validator = [
     validatorMessage: "Oops!"
   },
 ]
-`
+```
+#### And the result
 
- ![sample 2](/assets/images/sample-2.gif)
+![sample 2](/assets/images/sample-2.gif)
 
-`js
+
+#### Hide some thing ?
+
+```js
 const simple_form_visible = [
   {
     type: 'heading',
@@ -108,6 +120,8 @@ const simple_form_visible = [
     }
   },
 ]
-`
+```
+
+#### It's simple, yet
 
  ![sample 3](/assets/images/sample-3.gif)
