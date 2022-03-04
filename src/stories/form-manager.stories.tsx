@@ -17,6 +17,36 @@ export default {
 
 const Template: ComponentStory<typeof DFormManager> = (args) => <DFormManager {...args} />;
 
+const simple_form_visible = [
+  {
+    type: 'heading',
+    label: <>
+      <Title level={3}>Just simple form</Title>
+      <Text>It's quick and easy.</Text>
+      <Divider />
+    </>,
+    align: 'left'
+  },
+  {
+    type: 'input',
+    name: 'firstName',
+    label: 'First name',
+    // required: true,
+    span: 8,
+  },
+  {
+    type: 'input',
+    name: 'surName',
+    label: 'Surmame',
+    required: false,
+    span: 16,
+    visible: (values: any) => {
+      if (values.firstName == 'oops') return true;
+      return false;
+    }
+  },
+]
+
 const fields = [
   {
     type: 'heading',
@@ -158,13 +188,13 @@ const fields = [
 
 export const DefaultSetting = Template.bind({});
 DefaultSetting.args = {
-  fields: fields,
-  locale: 'vn',
+  fields: simple_form_visible,
+  locale: 'en',
   options: {
-    layout: 'vertical',
+    layout: 'horizontal',
 
   },
-  style: 'rounded'
+  style: 'circle'
 
 };
 

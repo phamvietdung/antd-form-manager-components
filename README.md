@@ -1,46 +1,113 @@
-# Getting Started with Create React App
+# Getting Started with Antd Form Manager Components
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project base on CRA and Ant.design to help you make a form manager quickly with some features
+
+- [StoryBook](https://phamvietdung.github.io/antd-form-manager-components/)
+- [NPM](https://www.npmjs.com/package/antd-form-manager-components)
+
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the your project directory, you can run:
 
-### `npm start`
+#### `npm i antd-form-manager-components`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Once it install, let do some fun
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```js
+const simple_form = [
+  {
+    type: 'heading',
+    label: <>
+      <Title level={3}>Just simple form</Title>
+      <Text>It's quick and easy.</Text>
+      <Divider />
+    </>,
+    align: 'left'
+  },
+  {
+    type: 'input',
+    name: 'firstName',
+    label: 'First name',
+    required: true,
+    span: 12
+  },
+  {
+    type: 'input',
+    name: 'surName',
+    label: 'Surmame',
+    required: false,
+    span: 12
+  },
+]
+`
+ ![sample 1](/assets/images/sample-1.gif)
 
-### `npm test`
+`js
+const simple_form_validator = [
+  {
+    type: 'heading',
+    label: <>
+      <Title level={3}>Just simple form</Title>
+      <Text>It's quick and easy.</Text>
+      <Divider />
+    </>,
+    align: 'left'
+  },
+  {
+    type: 'input',
+    name: 'firstName',
+    label: 'First name',
+    required: true,
+    span: 12,
+  },
+  {
+    type: 'input',
+    name: 'surName',
+    label: 'Surmame',
+    required: false,
+    span: 12,
+    validator: (values: any, current: any) => {
+      if (values.firstName == current) return true;
+      return false;
+    },
+    validatorMessage: "Oops!"
+  },
+]
+`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+ ![sample 2](/assets/images/sample-2.gif)
 
-### `npm run build`
+`js
+const simple_form_visible = [
+  {
+    type: 'heading',
+    label: <>
+      <Title level={3}>Just simple form</Title>
+      <Text>It's quick and easy.</Text>
+      <Divider />
+    </>,
+    align: 'left'
+  },
+  {
+    type: 'input',
+    name: 'firstName',
+    label: 'First name',
+    // required: true,
+    span: 8,
+  },
+  {
+    type: 'input',
+    name: 'surName',
+    label: 'Surmame',
+    required: false,
+    span: 16,
+    visible: (values: any) => {
+      if (values.firstName == 'oops') return true;
+      return false;
+    }
+  },
+]
+`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+ ![sample 3](/assets/images/sample-3.gif)
