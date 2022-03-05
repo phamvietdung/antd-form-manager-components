@@ -12,6 +12,8 @@ In the your project directory, you can run:
 
 #### `npm i antd-form-manager-components`
 
+***
+
 Once it install, let do some fun
 
 #### Input 
@@ -48,6 +50,8 @@ const simple_form = [
 #### Result
 
 ![sample1](./assets/images/sample-1.gif)
+
+***
 
 #### With custom validator
 
@@ -86,6 +90,9 @@ const simple_form_validator = [
 #### And the result
 
 ![sample 2](/assets/images/sample-2.gif)
+
+
+***
 
 
 #### Hide some thing ?
