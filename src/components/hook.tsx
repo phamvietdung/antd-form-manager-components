@@ -11,7 +11,7 @@ export const useFormManagerState = (props : DFormManagerProps) => {
 
     const [fields, setFields] = useState<any>([]);
 
-    const [values, setValues] = useState<any>(props.data??{});
+    const [values, setValues] = useState<any>({});
 
     const [valuesAsync, setValuesAsync] = useState<any>({});
 
@@ -40,7 +40,14 @@ export const useFormManagerState = (props : DFormManagerProps) => {
             setFormRef(props.ref);
         }
 
+        if(props.data !=undefined)
+            setValuesAsync(props.data);
+
     }, []);
+
+    useEffect(() => {
+        console.log(props.data);
+    }, [props.data])
 
     useEffect(() => {
 
@@ -49,7 +56,7 @@ export const useFormManagerState = (props : DFormManagerProps) => {
     }, [props.fields])
 
     useEffect(() => {
-        setValues(props.data??{})
+        //setValues(props.data??{})
     }, [props.data])
 
     return {
