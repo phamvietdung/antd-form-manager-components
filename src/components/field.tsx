@@ -24,7 +24,9 @@ interface IFieldBase extends IFieldCondition {
 
     placeholder?: string,
 
-    span?: number
+    span?: number,
+
+    dependencies : string[]
 
 }
 

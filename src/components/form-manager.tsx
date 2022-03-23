@@ -81,7 +81,7 @@ export const DFormManager = ({
 
     const { disabledHander,
         requiredHander,
-        visibleHander } = useHandler(formRef, values);
+        visibleHander, requireRule } = useHandler(formRef, values);
 
     const onValueChange = (value: Object, values: any) => {
         //console.log('change');
@@ -92,15 +92,17 @@ export const DFormManager = ({
         //console.log(value,values)
     }
 
+
     const formItemInit = (field: IFieldBase, index: number) => {
         return {
             name: field.name,
             label: field.label,
             rules: [
-                {
-                    required: field.required ? true : false,
 
-                },
+                // {
+                //     required: typeof (field.required) == 'boolean' ? field.required : false
+
+                // },
                 ({ getFieldValue }: any) => ({
                     validator(_: any, value: any) {
 
@@ -114,7 +116,8 @@ export const DFormManager = ({
                         //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
                     },
                     //message: field.validatorMessage ?? "Validator error"
-                })
+                }),
+                requireRule(field, props, defaultOptions)
             ],
             required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
@@ -127,7 +130,7 @@ export const DFormManager = ({
         return {
             name: field.name,
             label: field.label,
-            required: requiredHander(field.required),
+            // required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
             className: 'animated-field',
             rules: [
@@ -188,7 +191,7 @@ export const DFormManager = ({
                     //message: field.validatorMessage ?? "Validator error"
                 })
             ],
-            required: requiredHander(field.required),
+            // required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
             className: 'animated-field'
         }
@@ -200,18 +203,18 @@ export const DFormManager = ({
             span: field.span ?? 24,
         }
     }
-    
+
     const stylesInit = () => {
         return GetStyles();
     }
 
-    const combineArgFunction = (index : number) => {
+    const combineArgFunction = (index: number) => {
         return {
             disabledHander,
             formItemInit,
             stylesInit,
             fieldLayoutInit,
-            key : `${formId}-${index}`,
+            key: `${formId}-${index}`,
         }
     }
 
@@ -236,11 +239,11 @@ export const DFormManager = ({
 
                                 switch (_field.type) {
                                     case 'heading':
-                                        return <HeadingItem field={_field} index={index} formId={formId} {...combineArgFunction(index)}  />
+                                        return <HeadingItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'input':
                                         return <InputItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'password':
-                                       return <PasswordItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                        return <PasswordItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
 
                                     case 'textarea':
                                         {
@@ -397,9 +400,24 @@ export const DFormManager = ({
                     </Form>
                     {
                         props.isDebug != undefined && props.isDebug == true ?
-                            <code>
-                                {JSON.stringify(values)}
-                            </code>
+                            <React.Fragment>
+                                <React.Fragment>
+                                    <Button onClick={() => {
+                                        formRef.current?.validateFields().then((vls: any) => {
+                                            //console.log(vls);
+                                        }, (err: any) => {
+                                            console.log(err)
+                                        })
+                                    }}>
+                                        Submit
+                                    </Button>
+                                </React.Fragment>
+
+                                <code>
+                                    {JSON.stringify(values)}
+                                </code>
+                            </React.Fragment>
+
                             : <></>
                     }
                 </ConfigProvider>
@@ -412,7 +430,7 @@ export const DFormManager = ({
 
 
 
-export const HeadingItem = (props: { formId: any, field: IField, index: number, fieldLayoutInit : Function }) => {
+export const HeadingItem = React.memo((props: { formId: any, field: IField, index: number, fieldLayoutInit: Function }) => {
 
     let field = props.field as IFieldHeading;
 
@@ -429,14 +447,17 @@ export const HeadingItem = (props: { formId: any, field: IField, index: number, 
 
     )
 
-}
+})
 
-export const InputItem = (props: { formId: any, field: IField, index: number, 
-    fieldLayoutInit : Function, formItemInit : Function, 
-    disabledHander : Function, 
-    stylesInit : Function }) => {
+export const InputItem = React.memo((props: {
+    formId: any, field: IField, index: number,
+    fieldLayoutInit: Function, formItemInit: Function,
+    disabledHander: Function,
+    stylesInit: Function
+}) => {
 
     let field = props.field as IField;
+
     return (
         <Col {...props.fieldLayoutInit(field, props.index)}>
 
@@ -452,25 +473,27 @@ export const InputItem = (props: { formId: any, field: IField, index: number,
         </Col>
     )
 
-}
+})
 
-export const PasswordItem = (props: { formId: any, field: IField, index: number, 
-    fieldLayoutInit : Function, formItemInit : Function,
-     disabledHander : Function, 
-     stylesInit : Function }) => {
+export const PasswordItem = React.memo((props: {
+    formId: any, field: IField, index: number,
+    fieldLayoutInit: Function, formItemInit: Function,
+    disabledHander: Function,
+    stylesInit: Function
+}) => {
 
-        let field = props.field as IField;
-        return (
-            <Col {...props.fieldLayoutInit(field, props.index)}  >
-                <Form.Item {...props.formItemInit(field, props.index)}>
-                    <Input.Password
-                        style={props.stylesInit()}
-                        placeholder={field.placeholder ?? ""}
-                        disabled={props.disabledHander(field.disabled)}
-                        maxLength={field.max ?? undefined}
-                    />
-                </Form.Item>
-            </Col>
-        )
+    let field = props.field as IField;
+    return (
+        <Col {...props.fieldLayoutInit(field, props.index)}  >
+            <Form.Item {...props.formItemInit(field, props.index)}>
+                <Input.Password
+                    style={props.stylesInit()}
+                    placeholder={field.placeholder ?? ""}
+                    disabled={props.disabledHander(field.disabled)}
+                    maxLength={field.max ?? undefined}
+                />
+            </Form.Item>
+        </Col>
+    )
 
-}
+})

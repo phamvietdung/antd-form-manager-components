@@ -21,7 +21,9 @@ export const useHandler = (formRef : any, values : any) => {
     }
 
     const requiredHander = (required: undefined | boolean | IConditionFunction) => {
+
         let result = false;
+
         if (typeof (required) == 'boolean') {
             result = required;
         }
@@ -56,9 +58,28 @@ export const useHandler = (formRef : any, values : any) => {
         return result;
     }
 
+    const requireRule = (field : any, props : any, defaultOptions : any) =>  ({ getFieldValue }: any) => ({
+        validator(_: any, value: any) {
+
+            if (typeof (field.required) == 'function') {
+
+                let fieldvalues = getFieldValue()
+
+                if (field.required(fieldvalues))
+                    if (fieldvalues == undefined || fieldvalues[field.name] == undefined || fieldvalues[field.name].trim() == "")
+                        return Promise.reject(`${field.label} ${(props.options?.rule?.message ?? defaultOptions.rule?.message)}`);
+                    else
+                        return Promise.resolve();
+            }
+                
+            return Promise.resolve();
+        }
+    })
+
     return {
         disabledHander,
         requiredHander,
-        visibleHander
+        visibleHander,
+        requireRule
     }
 }
