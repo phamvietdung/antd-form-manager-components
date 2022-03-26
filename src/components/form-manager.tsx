@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import { useFormManagerState } from './hook'
 
-import DateTimeGroup from './form-items/datetime-group';
 
 import { Editor } from "react-draft-wysiwyg";
 
@@ -16,7 +15,7 @@ import {
     Form, Input, Button, Select, ConfigProvider, DatePicker, InputNumber, Radio, Switch, Checkbox, TimePicker, Row, Col, Space, Spin, Tooltip, notification, List, FormInstance, Typography
 } from "antd";
 
-import TextArea from 'antd/lib/input/TextArea';
+
 
 import moment from 'moment';
 
@@ -33,11 +32,12 @@ import { IConditionFunction } from './field-condition';
 import { useHandler } from './handler';
 import { SetStyles, GetStyles, GetStyleName, IUIType, GetLocale, SetLocale, ILocale } from './const';
 
+import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem } from './form-items';
+
 const { Title } = Typography;
 
 const { RangePicker } = DatePicker;
 
-const { Option } = Select;
 
 export interface DFormManagerProps {
     fields: any[],
@@ -126,40 +126,7 @@ export const DFormManager = ({
         }
     }
 
-    const formItemEditor = (field: IFieldBase, index: number) => {
-        return {
-            name: field.name,
-            label: field.label,
-            // required: requiredHander(field.required),
-            hidden: visibleHander(field.visible),
-            className: 'animated-field',
-            rules: [
-                ({ getFieldValue }: any) => ({
-                    validator(_: any, value: any) {
 
-                        if (field.required == true) {
-                            //console.log(value.blocks);
-                            if (value.blocks == undefined
-                                || value.blocks.filter((x: any) => x.text != "") == 0)
-                                return Promise.reject(field.validatorMessage ?? "Validator error!");
-
-                        }
-
-                        if (field.validator == undefined)
-                            return Promise.resolve();
-
-                        if (field.validator(getFieldValue(), value))
-                            return Promise.resolve();
-                        else
-                            return Promise.reject(field.validatorMessage ?? "Validator error!");
-                        //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
-                    }
-                    //message: field.validatorMessage ?? "Validator error"
-                })
-            ]
-        }
-
-    }
 
     const formItemInitDob = (field: IFieldBase, index: number) => {
         return {
@@ -238,160 +205,17 @@ export const DFormManager = ({
                             {fields.map((_field: IField, index: number) => {
 
                                 switch (_field.type) {
-                                    case 'heading':
-                                        return <HeadingItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'input':
-                                        return <InputItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'password':
-                                        return <PasswordItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'heading':return <HeadingItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'input':return <InputItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'password':return <PasswordItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'textarea':return <TextareaItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'number':return <NumberItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'datetime': return <DatetimeItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'datetime-group': return <DatetimeItemGroup field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'select': return <SelectItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'radio': return <RadioItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'editor': return <EditorItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
 
-                                    case 'textarea':
-                                        {
-                                            let field = _field as IField;
-                                            return (
-                                                <Col {...fieldLayoutInit(field, index)}  >
-                                                    <Form.Item {...formItemInit(field, index)}>
-                                                        <TextArea
-                                                            style={stylesInit()}
-                                                            placeholder={field.placeholder ?? ""}
-                                                            disabled={disabledHander(field.disabled)}
-                                                            maxLength={field.max ?? undefined}
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            )
-                                        }
-
-                                    case 'number':
-                                        {
-                                            let field = _field as IFieldNumber;
-                                            return (
-                                                <Col {...fieldLayoutInit(field, index)}  >
-                                                    <Form.Item {...formItemInit(field, index)}>
-                                                        <InputNumber
-                                                            style={stylesInit()}
-                                                            formatter={(value: any) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}
-                                                            parser={(value: any) => value.replace(/\$\s?|(\.*)/g, '')}
-                                                            max={field.max ?? undefined}
-                                                            placeholder={field.placeholder ?? ""}
-                                                            min={field.min ?? undefined}
-                                                            //disabled={isDisabled(field.disabled, field.name) ?? false}
-                                                            maxLength={field.max ?? undefined}
-                                                            disabled={disabledHander(field.disabled)}
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-
-                                            )
-                                        }
-
-                                    case 'datetime':
-                                        {
-                                            let field = _field as IFieldDateTime;
-                                            return (
-                                                <Col {...fieldLayoutInit(field, index)}  >
-                                                    <Form.Item {...formItemInit(field, index)}>
-                                                        <DatePicker
-                                                            style={stylesInit()}
-                                                            showToday={field.showToday ?? false}
-                                                            showTime={field.showTime ?? false}
-                                                            placeholder={field.placeholder ?? ""}
-                                                            //disabledDate={} 
-                                                            disabled={disabledHander(field.disabled)}
-                                                        //format={field.showTime ? INPUT_DATE_TIME_LONG_FORMAT : INPUT_DATE_TIME_SHORT_FORMAT} 
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            )
-                                        }
-                                    case 'datetime-group':
-                                        {
-                                            let field = _field as IFieldDateTime;
-                                            return (
-                                                <Col {...fieldLayoutInit(field, index)}  >
-                                                    <Form.Item {...formItemInitDob(field, index)}>
-                                                        <DateTimeGroup
-                                                            style={stylesInit()}
-                                                            name={field.name}
-                                                            disabled={disabledHander(field.disabled)}
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            )
-                                        }
-                                    case 'select':
-                                        {
-                                            let field = _field as IFieldSelect;
-                                            return (
-                                                <Col {...fieldLayoutInit(field, index)}  >
-                                                    <Form.Item {...formItemInit(field, index)}>
-                                                        <Select
-                                                            disabled={disabledHander(field.disabled)}
-                                                            showSearch
-                                                            style={stylesInit()}
-                                                            placeholder={field.placeholder ?? ""}
-                                                            defaultActiveFirstOption={false}
-                                                            optionFilterProp="children"
-                                                            filterOption={(input, option: any) =>
-                                                                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                                                            }
-                                                            allowClear={!field?.allowClear ? false : true}
-                                                        >
-                                                            {
-                                                                field.dataSource != undefined
-                                                                && field.dataSource!.data != undefined
-                                                                && field.dataSource!.data!.map((select_data: any, select_index: any) => (
-                                                                    <Option
-                                                                        value={field.dataSource!.id !== undefined ? select_data[field.dataSource!.id] : select_data['id']}
-                                                                        key={`${formId}-fields-${field.name}-${index}-${select_index}`}>
-                                                                        {field.dataSource!.label !== undefined ? select_data[field.dataSource!.label] : select_data['value']}
-                                                                    </Option>
-                                                                ))
-                                                            }
-                                                        </Select>
-                                                    </Form.Item>
-                                                </Col>
-                                            )
-                                        }
-                                    case 'radio':
-                                        {
-                                            let field = _field as IFieldSelect;
-                                            return (
-                                                <Col {...fieldLayoutInit(field, index)}  >
-                                                    <Form.Item {...formItemInit(field, index)}>
-                                                        <Radio.Group
-                                                            // style={stylesInit()}
-                                                            options={[
-                                                                { label: 'Female', value: 'female' },
-                                                                { label: 'Male', value: 'male' }
-                                                            ]}
-                                                            //onChange={this.onChange4}
-                                                            //value={value4}
-                                                            optionType="button"
-                                                            buttonStyle="solid"
-                                                        />
-                                                    </Form.Item>
-                                                </Col>
-                                            )
-                                        }
-                                    case 'editor':
-                                        {
-                                            let field = _field as IFieldSelect;
-                                            return (
-                                                <Col {...fieldLayoutInit(field, index)}  >
-                                                    <Form.Item {...formItemEditor(field, index)}>
-                                                        <Editor toolbar={
-                                                            ReactDraftOption.toolbar
-                                                        }
-
-                                                            editorStyle={ReactDraftOption.editorStyle}
-                                                            toolbarStyle={ReactDraftOption.toolbarStyle} />
-
-                                                    </Form.Item>
-                                                </Col>
-
-                                            )
-                                        }
                                 }
 
                             })
@@ -427,73 +251,3 @@ export const DFormManager = ({
     );
 };
 
-
-
-
-export const HeadingItem = React.memo((props: { formId: any, field: IField, index: number, fieldLayoutInit: Function }) => {
-
-    let field = props.field as IFieldHeading;
-
-    return (
-        <Col {...props.fieldLayoutInit(props.formId, field, props.index)}>
-            <div style={{ textAlign: field.align ?? 'left' }}>
-                {
-                    typeof (field.label) == 'string' ?
-                        <Title level={3}>{field.label}</Title>
-                        : field.label
-                }
-            </div>
-        </Col>
-
-    )
-
-})
-
-export const InputItem = React.memo((props: {
-    formId: any, field: IField, index: number,
-    fieldLayoutInit: Function, formItemInit: Function,
-    disabledHander: Function,
-    stylesInit: Function
-}) => {
-
-    let field = props.field as IField;
-
-    return (
-        <Col {...props.fieldLayoutInit(field, props.index)}>
-
-            <Form.Item {...props.formItemInit(field, props.index)}>
-                <Input
-                    style={props.stylesInit()}
-                    placeholder={field.placeholder ?? ""}
-                    maxLength={field.max ?? undefined}
-                    disabled={props.disabledHander(field.disabled)}
-                />
-            </Form.Item>
-
-        </Col>
-    )
-
-})
-
-export const PasswordItem = React.memo((props: {
-    formId: any, field: IField, index: number,
-    fieldLayoutInit: Function, formItemInit: Function,
-    disabledHander: Function,
-    stylesInit: Function
-}) => {
-
-    let field = props.field as IField;
-    return (
-        <Col {...props.fieldLayoutInit(field, props.index)}  >
-            <Form.Item {...props.formItemInit(field, props.index)}>
-                <Input.Password
-                    style={props.stylesInit()}
-                    placeholder={field.placeholder ?? ""}
-                    disabled={props.disabledHander(field.disabled)}
-                    maxLength={field.max ?? undefined}
-                />
-            </Form.Item>
-        </Col>
-    )
-
-})
