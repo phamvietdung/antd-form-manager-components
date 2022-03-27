@@ -1,6 +1,6 @@
 import { Col, Typography, Form, Input, InputNumber, DatePicker, Select, Radio } from "antd";
 import React from "react";
-import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../field';
+import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../interfaces/field';
 
 const { Option } = Select;
 
@@ -8,7 +8,7 @@ export const _SelectItem = React.memo((props: {
     formId: any, field: IField, index: number,
     fieldLayoutInit: Function, formItemInit: Function,
     disabledHander: Function,
-    stylesInit: Function
+    // stylesInit: Function
 }) => {
 
     let field = props.field as IFieldSelect;
@@ -16,7 +16,7 @@ export const _SelectItem = React.memo((props: {
     let formId = props.formId;
     let fieldLayoutInit = props.disabledHander;
     let formItemInit = props.formItemInit;
-    let stylesInit = props.stylesInit;
+    // let stylesInit = props.stylesInit;
     let disabledHander = props.disabledHander;
 
     return (
@@ -25,7 +25,7 @@ export const _SelectItem = React.memo((props: {
                 <Select
                     disabled={disabledHander(field.disabled)}
                     showSearch
-                    style={stylesInit()}
+                    // style={stylesInit()}
                     placeholder={field.placeholder ?? ""}
                     defaultActiveFirstOption={false}
                     optionFilterProp="children"
@@ -58,7 +58,7 @@ export const _RadioItem = React.memo((props: {
     formId: any, field: IField, index: number,
     fieldLayoutInit: Function, formItemInit: Function,
     disabledHander: Function,
-    stylesInit: Function
+    // stylesInit: Function
 }) => {
 
     let field = props.field as IFieldSelect;
@@ -66,13 +66,13 @@ export const _RadioItem = React.memo((props: {
     let formId = props.formId;
     let fieldLayoutInit = props.disabledHander;
     let formItemInit = props.formItemInit;
-    let stylesInit = props.stylesInit;
+    // let stylesInit = props.stylesInit;
     let disabledHander = props.disabledHander;
     return (
         <Col {...fieldLayoutInit(field, index)}  >
             <Form.Item {...formItemInit(field, index)}>
                 <Radio.Group
-                    // style={stylesInit()}
+                    // // style={stylesInit()}
                     options={[
                         { label: 'Female', value: 'female' },
                         { label: 'Male', value: 'male' }

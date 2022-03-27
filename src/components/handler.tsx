@@ -1,4 +1,4 @@
-import { IConditionFunction } from "./field-condition";
+import { IConditionFunction } from "./interfaces/field-condition";
 
 
 export const useHandler = (formRef : any, values : any) => {

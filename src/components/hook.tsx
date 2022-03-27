@@ -1,7 +1,7 @@
 import { FormInstance } from "antd";
 import React, { useEffect, useState } from "react";
 import { DFormManagerProps } from ".";
-import { NewId } from "./helper";
+import { NewId } from "./utils/helper";
 
 export const useFormManagerState = (props : DFormManagerProps) => {
 

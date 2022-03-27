@@ -5,6 +5,7 @@ const { Title, Text, Link } = Typography;
 export default [
     {
       type: 'plugin',
+      
       pluginName : 'comp'
     },
   ]

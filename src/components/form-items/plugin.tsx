@@ -1,6 +1,6 @@
 import { Col, Typography } from "antd";
 import React from "react";
-import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../field';
+import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../interfaces/field';
 
 interface IPlugin {
     name: string, plugin: JSX.Element

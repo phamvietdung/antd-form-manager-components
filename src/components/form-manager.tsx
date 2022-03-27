@@ -8,26 +8,27 @@ import './styles.css'
 
 import { Form, Button, ConfigProvider, Row } from "antd";
 
-import { IField, IFieldBase } from './field';
+import { IField, IFieldBase } from './interfaces/field';
 
-import { IFormOptions } from './form-option';
+import { IFormOptions } from './interfaces/form-option';
 
 import { useHandler } from './handler';
 
-import { SetStyles, GetStyles, GetStyleName, IUIType, GetLocale, SetLocale, ILocale } from './const';
+// import { SetStyles, GetStyles, GetStyleName, IUIType, GetLocale, SetLocale, ILocale } from './const';
 
 import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem, PluginItem, SetPluginComponent } from './form-items';
+
+import { Locale } from 'antd/lib/locale-provider';
 
 
 
 
 export interface DFormManagerProps {
     fields: any[],
-    locale?: ILocale,
+    locale?: Locale,
     options?: IFormOptions,
     ref?: any,
     data?: object,
-    style?: IUIType,
     width?: number,
     isDebug?: boolean
 }
@@ -49,11 +50,6 @@ const defaultOptions: IFormOptions = {
 export const DFormManager = ({
     ...props
 }: DFormManagerProps) => {
-
-    if (props.style != undefined)
-        SetStyles(props.style);
-    if (props.locale != undefined)
-        SetLocale(props.locale);
 
     const { formId, setFormId,
         formRef, setFormRef,
@@ -153,15 +149,11 @@ export const DFormManager = ({
         }
     }
 
-    const stylesInit = () => {
-        return GetStyles();
-    }
-
     const combineArgFunction = (index: number) => {
         return {
             disabledHander,
             formItemInit,
-            stylesInit,
+            // stylesInit,
             fieldLayoutInit,
             key: `${formId}-${index}`,
         }
@@ -170,7 +162,7 @@ export const DFormManager = ({
     return (
         <div style={{ maxWidth: props.width ?? 'auto' }}>
             {formRef != undefined ?
-                <ConfigProvider locale={GetLocale()}>
+                <ConfigProvider locale={props.locale}>
                     <Form
                         validateMessages={
                             {
@@ -181,7 +173,7 @@ export const DFormManager = ({
                         id={formId} ref={formRef} name="control-ref" initialValues={props.data ?? {}}
                         onValuesChange={onValueChange}
                         onFieldsChange={onFieldChange}
-                        className={GetStyleName()}
+                        // className={GetStyleName()}
                     >
                         <Row gutter={16}>
                             {fields.map((_field: IField, index: number) => {
