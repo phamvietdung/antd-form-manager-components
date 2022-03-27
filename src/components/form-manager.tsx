@@ -10,16 +10,15 @@ import { Form, Button, ConfigProvider, Row } from "antd";
 
 import { IField, IFieldBase } from './interfaces/field';
 
-
-
-
 import { useHandler } from './handler';
 
-// import { SetStyles, GetStyles, GetStyleName, IUIType, GetLocale, SetLocale, ILocale } from './const';
-
-import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem, PluginItem, SetPluginComponent } from './form-items';
+import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem, PluginItem } from './form-items';
 
 import { DFormManagerProps } from './interfaces/form'
+
+import { GetConfig } from './utils/config';
+
+const configs = GetConfig();
 
 /**
  * Ant[D]esign form manager or called DFormManager is a simple form manager.
@@ -52,7 +51,7 @@ export const DFormManager = ({
     }
 
     const onFieldChange = (value: Object, values: any) => {
-       
+
     }
 
 
@@ -85,14 +84,14 @@ export const DFormManager = ({
             required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
             // disabled: disabledHander(field.disabled), // not working
-            className: 'animated-field'
+            className: configs.itemClassName
         }
     }
 
     const fieldLayoutInit = (field: any, index: number) => {
         return {
             // key: `${formId}-${index}`,
-            span: field.span ?? 24,
+            span: field.span ?? configs.maxSpan,
         }
     }
 
@@ -117,15 +116,15 @@ export const DFormManager = ({
                             }
                         }
                         // layout={props.options?.layout ?? 'vertical'}
-                        id={formId} 
-                        ref={formRef} 
-                        name="control-ref" 
-                        initialValues={props.data ?? {}}
+                        id={formId}
+                        ref={formRef}
+                        name="control-ref"
+                        initialValues={props.data ?? configs.defaultData}
                         onValuesChange={onValueChange}
                         onFieldsChange={onFieldChange}
-                    // className={GetStyleName()}
+                        className={configs.className}
                     >
-                        <Row gutter={16}>
+                        <Row gutter={configs.gutter}>
                             {fields.map((_field: IField, index: number) => {
 
                                 switch (_field.type) {
