@@ -24,5 +24,6 @@ export type IFieldType = 'input' | 'password' | 'textarea' | 'autoComplete' | 'e
 | 'heading' 
 | 'radio' 
 | 'checkbox' 
-| 'confirm'  | 'hidden' | 'multiple-value' | 'tags' ;
+| 'confirm'  | 'hidden' | 'multiple-value' | 'tags'
+| 'plugin' ;
 

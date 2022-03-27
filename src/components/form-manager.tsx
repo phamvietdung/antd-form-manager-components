@@ -2,41 +2,23 @@ import React, { useState, useEffect } from 'react';
 
 import { useFormManagerState } from './hook'
 
-
-import { Editor } from "react-draft-wysiwyg";
-
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
 import 'antd/dist/antd.css'
 
 import './styles.css'
 
-import {
-    Form, Input, Button, Select, ConfigProvider, DatePicker, InputNumber, Radio, Switch, Checkbox, TimePicker, Row, Col, Space, Spin, Tooltip, notification, List, FormInstance, Typography
-} from "antd";
+import { Form, Button, ConfigProvider, Row } from "antd";
 
-
-
-import moment from 'moment';
-
-import { IFieldType } from './field-type';
-
-import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from './field';
-
-import { Locale } from 'antd/lib/locale-provider';
-
-import ReactDraftOption from './react-draft-wysiwyg/options'
+import { IField, IFieldBase } from './field';
 
 import { IFormOptions } from './form-option';
-import { IConditionFunction } from './field-condition';
+
 import { useHandler } from './handler';
+
 import { SetStyles, GetStyles, GetStyleName, IUIType, GetLocale, SetLocale, ILocale } from './const';
 
-import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem } from './form-items';
+import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem, PluginItem, SetPluginComponent } from './form-items';
 
-const { Title } = Typography;
 
-const { RangePicker } = DatePicker;
 
 
 export interface DFormManagerProps {
@@ -205,17 +187,17 @@ export const DFormManager = ({
                             {fields.map((_field: IField, index: number) => {
 
                                 switch (_field.type) {
-                                    case 'heading':return <HeadingItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'input':return <InputItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'password':return <PasswordItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'textarea':return <TextareaItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'number':return <NumberItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'heading': return <HeadingItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'input': return <InputItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'password': return <PasswordItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'textarea': return <TextareaItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'number': return <NumberItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'datetime': return <DatetimeItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'datetime-group': return <DatetimeItemGroup field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'select': return <SelectItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'radio': return <RadioItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'editor': return <EditorItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-
+                                    case 'plugin' : return <PluginItem field={_field} index={index} formId={formId}/>
                                 }
 
                             })

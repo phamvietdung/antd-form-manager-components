@@ -2,7 +2,7 @@ import React from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { DayOfMonth, DayOfWeek, MonthOfYear, Year, SetStyles, GetStyles } from '../components/const'
 
-import { DFormManager } from '../components/form-manager';
+import { DFormManager, SetPluginComponent } from '../components';
 
 import viVn from 'antd/es/locale/vi_VN'
 
@@ -10,6 +10,17 @@ import zhCN from 'antd/es/locale/zh_CN';
 
 import { Sample1, Sample2 } from './example'
 
+import { Form, Input } from 'antd';
+
+const TestComp = (props: {}) => {
+  return (
+    <Form.Item name={'hehe'} >
+      <Input />
+    </Form.Item >
+  )
+}
+
+SetPluginComponent('comp', <TestComp />)
 
 
 export default {
@@ -193,13 +204,13 @@ const Template: ComponentStory<typeof DFormManager> = (args) => <DFormManager is
 export const Sample1Setting = Template.bind({});
 Sample1Setting.args = {
   fields: Sample1,
-  locale: 'en',
+  locale: viVn,
   options: {
     layout: 'horizontal',
 
   },
-  data : {
-    firstName : 'oops'
+  data: {
+    firstName: 'oops'
   },
   style: 'default'
 

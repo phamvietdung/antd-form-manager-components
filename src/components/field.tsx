@@ -85,7 +85,11 @@ interface IFieldDateTime extends IFieldBase {
     showToday?: boolean,
 }
 
-interface IField extends IFieldBase, IFieldLengthValidator {
+interface IFieldPluginName {
+    pluginName? : string
+}
+
+interface IField extends IFieldBase, IFieldLengthValidator, IFieldPluginName {
 
     format?: string,
 

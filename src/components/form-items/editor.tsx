@@ -3,6 +3,7 @@ import React from "react";
 import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../field';
 import { Editor } from "react-draft-wysiwyg";
 import ReactDraftOption from '../react-draft-wysiwyg/options'
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 
 

@@ -8,6 +8,8 @@ import { _SelectItem, _RadioItem } from './select';
 
 import { _EditorItem } from './editor';
 
+import _PluginItem, {_GetPluginComponent, _SetPluginComponent} from './plugin';
+
 export const HeadingItem = _HeadingItem;
 
 export const InputItem = _InputItem;
@@ -27,3 +29,9 @@ export const SelectItem = _SelectItem;
 export const RadioItem = _RadioItem;
 
 export const EditorItem = _EditorItem;
+
+export const PluginItem = _PluginItem;
+
+// export const GetPluginComponent = _GetPluginComponent;
+
+export const SetPluginComponent = _SetPluginComponent;
