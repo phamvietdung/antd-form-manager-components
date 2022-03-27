@@ -10,7 +10,8 @@ import { Form, Button, ConfigProvider, Row } from "antd";
 
 import { IField, IFieldBase } from './interfaces/field';
 
-import { IFormOptions } from './interfaces/form-option';
+
+
 
 import { useHandler } from './handler';
 
@@ -18,34 +19,18 @@ import { useHandler } from './handler';
 
 import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem, PluginItem, SetPluginComponent } from './form-items';
 
-import { Locale } from 'antd/lib/locale-provider';
+import { DFormManagerProps } from './interfaces/form'
 
-
-
-
-export interface DFormManagerProps {
-    fields: any[],
-    locale?: Locale,
-    options?: IFormOptions,
-    ref?: any,
-    data?: object,
-    width?: number,
-    isDebug?: boolean
-}
-
-const defaultOptions: IFormOptions = {
-    select: {
-        defaultId: "id",
-        defaultLabel: "value"
-    },
-    datetime: {
-
-    },
-    rule: {
-        message: "is required!"
-    },
-    layout: 'vertical'
-}
+/**
+ * Ant[D]esign form manager or called DFormManager is a simple form manager.
+ * 
+ * With some key feature to make you create a from base on ant.design quickly
+ * 
+ * I'll provide gRPC support as soon as posible...
+ * 
+ * @param props DFormManagerProps [https://google.com.vn] 
+ * @returns component
+ */
 
 export const DFormManager = ({
     ...props
@@ -61,13 +46,13 @@ export const DFormManager = ({
         requiredHander,
         visibleHander, requireRule } = useHandler(formRef, values);
 
+
     const onValueChange = (value: Object, values: any) => {
-        //console.log('change');
         setValuesAsync(values);
     }
 
     const onFieldChange = (value: Object, values: any) => {
-        //console.log(value,values)
+       
     }
 
 
@@ -95,49 +80,11 @@ export const DFormManager = ({
                     },
                     //message: field.validatorMessage ?? "Validator error"
                 }),
-                requireRule(field, props, defaultOptions)
+                requireRule(field, props)
             ],
             required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
             // disabled: disabledHander(field.disabled), // not working
-            className: 'animated-field'
-        }
-    }
-
-
-
-    const formItemInitDob = (field: IFieldBase, index: number) => {
-        return {
-            name: field.name,
-            label: field.label,
-            rules: [
-                ({ getFieldValue }: any) => ({
-                    validator(_: any, value: any) {
-
-                        if (field.required == true) {
-                            if (value.date == undefined
-                                || value.month == undefined
-                                || value.year == undefined
-                                || value.date.trim() == ""
-                                || value.month.trim() == ""
-                                || value.year.trim() == "")
-                                return Promise.reject(field.validatorMessage ?? "Validator error!");
-                        }
-
-                        if (field.validator == undefined)
-                            return Promise.resolve();
-
-                        if (field.validator(getFieldValue(), value))
-                            return Promise.resolve();
-                        else
-                            return Promise.reject(field.validatorMessage ?? "Validator error!");
-                        //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
-                    },
-                    //message: field.validatorMessage ?? "Validator error"
-                })
-            ],
-            // required: requiredHander(field.required),
-            hidden: visibleHander(field.visible),
             className: 'animated-field'
         }
     }
@@ -166,14 +113,17 @@ export const DFormManager = ({
                     <Form
                         validateMessages={
                             {
-                                required: "${label} " + (props.options?.rule?.message ?? defaultOptions.rule?.message),
+                                // required: "${label} " + (props.options?.rule?.message ?? defaultOptions.rule?.message),
                             }
                         }
-                        layout={props.options?.layout ?? 'vertical'}
-                        id={formId} ref={formRef} name="control-ref" initialValues={props.data ?? {}}
+                        // layout={props.options?.layout ?? 'vertical'}
+                        id={formId} 
+                        ref={formRef} 
+                        name="control-ref" 
+                        initialValues={props.data ?? {}}
                         onValuesChange={onValueChange}
                         onFieldsChange={onFieldChange}
-                        // className={GetStyleName()}
+                    // className={GetStyleName()}
                     >
                         <Row gutter={16}>
                             {fields.map((_field: IField, index: number) => {
@@ -189,35 +139,13 @@ export const DFormManager = ({
                                     case 'select': return <SelectItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'radio': return <RadioItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'editor': return <EditorItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'plugin' : return <PluginItem field={_field} index={index} formId={formId}/>
+                                    case 'plugin': return <PluginItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                 }
 
                             })
                             }
                         </Row>
                     </Form>
-                    {
-                        props.isDebug != undefined && props.isDebug == true ?
-                            <React.Fragment>
-                                <React.Fragment>
-                                    <Button onClick={() => {
-                                        formRef.current?.validateFields().then((vls: any) => {
-                                            //console.log(vls);
-                                        }, (err: any) => {
-                                            console.log(err)
-                                        })
-                                    }}>
-                                        Submit
-                                    </Button>
-                                </React.Fragment>
-
-                                <code>
-                                    {JSON.stringify(values)}
-                                </code>
-                            </React.Fragment>
-
-                            : <></>
-                    }
                 </ConfigProvider>
                 : <></>
             }

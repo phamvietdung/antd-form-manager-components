@@ -2,25 +2,39 @@ import { Col, Typography } from "antd";
 import React from "react";
 import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../interfaces/field';
 
+interface IPluginProps {
+    pluginName: string,
+    field: IField
+}
+
+//export type PluginElement = (props : {}) => JSX.Element;
+
+export type PluginElement = React.FunctionComponent<{ field: IField }>;// => JSX.Element;
+
 interface IPlugin {
-    name: string, plugin: JSX.Element
+    name: string, plugin: PluginElement
 }
 
 const plugins: IPlugin[] = [];
 
-export const _GetPluginComponent = React.memo((props: { pluginName: string }) => {
+export const _GetPluginComponent = React.memo((props: IPluginProps) => {
 
     const plugin_filter = plugins.filter((x: IPlugin) => x.name == props.pluginName);
 
-    if (plugin_filter.length > 0)
-        return (plugin_filter[0].plugin);
+    if (plugin_filter.length > 0) {
+        let Current = plugin_filter[0].plugin;
+        return (
+            <Current {...{ field: props.field }} />
+        );
+    }
+
     else
         return (<React.Fragment>
             Plugin: {props.pluginName} is not register!
         </React.Fragment>);
 })
 
-export const _SetPluginComponent = (name: string, plugin: JSX.Element) => {
+export const _SetPluginComponent = (name: string, plugin: PluginElement) => {
     plugins.push(
         {
             name, plugin
@@ -36,7 +50,7 @@ export default React.memo((props: { formId: any, field: IField, index: number })
 
     return (
         <React.Fragment>
-            <_GetPluginComponent pluginName={field.pluginName!} />
+            <_GetPluginComponent pluginName={field.pluginName!} {...{ field }} />
         </React.Fragment>
 
     )

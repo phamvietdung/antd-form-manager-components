@@ -1,9 +1,8 @@
 import { SetPluginComponent } from './form-items';
 
-import {DFormManager, DFormManagerProps} from './form-manager';
+import { DFormManager } from './form-manager';
 
-// export const GetPluginComponent = GetComp;
-
+import { DFormManagerProps } from './interfaces/form';
 
 export {
     DFormManager,

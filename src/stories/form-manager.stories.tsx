@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 // import { DayOfMonth, DayOfWeek, MonthOfYear, Year, SetStyles, GetStyles } from '../components/const'
 
@@ -12,15 +12,23 @@ import { Sample1, Sample2 } from './example'
 
 import { Form, Input } from 'antd';
 
-const TestComp = (props: {}) => {
+import { IField } from '../components/interfaces/field';
+
+const TestComp = (props: { field: IField }) => {
   return (
-    <Form.Item name={'hehe'} >
-      <Input />
-    </Form.Item >
+    <React.Fragment>
+      <Form.Item name={props.field.name} label={props.field.label} >
+        <Input />
+      </Form.Item >
+      <Form.Item name={'dafuke'} label={props.field.label} >
+        <Input />
+      </Form.Item >
+    </React.Fragment>
+
   )
 }
 
-SetPluginComponent('comp', <TestComp />)
+SetPluginComponent('comp', TestComp)
 
 
 export default {
@@ -28,7 +36,19 @@ export default {
   component: DFormManager,
 } as ComponentMeta<typeof DFormManager>;
 
-const Template: ComponentStory<typeof DFormManager> = (args) => <DFormManager isDebug={true} width={600} {...args} />;
+const Template: ComponentStory<typeof DFormManager> = (args) => {
+
+  const [debug, setDebug] = useState<any>({});
+
+  return (
+    <React.Fragment>
+      <DFormManager
+        getDebugPanel={setDebug}
+        width={600} {...args} />
+      {JSON.stringify(debug)}
+    </React.Fragment>
+  )
+}
 
 // const simple_form_visible = [
 //   {

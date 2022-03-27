@@ -1,9 +1,16 @@
-import { FormInstance } from "antd";
+import { FormInstance, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { DFormManagerProps } from ".";
 import { NewId } from "./utils/helper";
 
-export const useFormManagerState = (props : DFormManagerProps) => {
+const { Text, Link } = Typography;
+
+/**
+ * Provide hook
+ * @param props 
+ * @returns 
+ */
+export const useFormManagerState = (props: DFormManagerProps) => {
 
     const [formId, setFormId] = useState<string>("");
 
@@ -21,14 +28,14 @@ export const useFormManagerState = (props : DFormManagerProps) => {
 
         return () => clearTimeout(timeOutId);
 
-    },[valuesAsync]);
+    }, [valuesAsync]);
 
 
     useEffect(() => {
+        if (props.getDebugPanel != undefined && typeof (props.getDebugPanel) == 'function')
+            props.getDebugPanel(values);
 
-        //console.log(values);
-
-    },[values]);
+    }, [values]);
 
     useEffect(() => {
 
@@ -40,7 +47,7 @@ export const useFormManagerState = (props : DFormManagerProps) => {
             setFormRef(props.ref);
         }
 
-        if(props.data !=undefined)
+        if (props.data != undefined)
             setValuesAsync(props.data);
 
     }, []);

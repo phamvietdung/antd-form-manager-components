@@ -58,7 +58,7 @@ export const useHandler = (formRef : any, values : any) => {
         return result;
     }
 
-    const requireRule = (field : any, props : any, defaultOptions : any) =>  ({ getFieldValue }: any) => ({
+    const requireRule = (field : any, props : any) =>  ({ getFieldValue }: any) => ({
         validator(_: any, value: any) {
 
             if (typeof (field.required) == 'function') {
@@ -67,7 +67,7 @@ export const useHandler = (formRef : any, values : any) => {
 
                 if (field.required(fieldvalues))
                     if (fieldvalues == undefined || fieldvalues[field.name] == undefined || fieldvalues[field.name].trim() == "")
-                        return Promise.reject(`${field.label} ${(props.options?.rule?.message ?? defaultOptions.rule?.message)}`);
+                        return Promise.reject(`${field.label} ${(props.options?.rule?.message ?? "require rule not correct")}`);
                     else
                         return Promise.resolve();
             }

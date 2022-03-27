@@ -1,50 +1,52 @@
-import { FormLayout } from "antd/lib/form/Form"
+// import { FormLayout } from "antd/lib/form/Form"
 
-type IFormOptions = {
+// type IFormOptions = {
 
-    select?: ISelectOptions,
+//     select?: ISelectOptions,
 
-    datetime?: IDateTimeOptions,
+//     datetime?: IDateTimeOptions,
 
-    rule? : IRuleOptions,
+//     rule? : IRuleOptions,
 
-    layout? : FormLayout,
+//     layout? : FormLayout,
 
-    //styles? : React.CSSProperties
+//     //styles? : React.CSSProperties
 
 
-}
+// }
 
-type IRuleOptions = {
-    message : string
-}
+// type IRuleOptions = {
+//     message : string
+// }
 
-type ISelectOptions = {
+// type ISelectOptions = {
 
-    defaultId: string,
+//     defaultId: string,
 
-    defaultLabel: string
+//     defaultLabel: string
 
-}
+// }
 
-type IDateTimeOptions = {
+// type IDateTimeOptions = {
 
-}
+// }
 
-type ILayoutOptions = {
+// type ILayoutOptions = {
 
-}
+// }
 
-export {
+// export {
 
-    IFormOptions,
+//     IFormOptions,
 
-    ISelectOptions,
+//     ISelectOptions,
 
-    IDateTimeOptions, 
+//     IDateTimeOptions, 
 
-    IRuleOptions,
+//     IRuleOptions,
 
-    ILayoutOptions
+//     ILayoutOptions
     
-}
+// }
+
+export default {}
