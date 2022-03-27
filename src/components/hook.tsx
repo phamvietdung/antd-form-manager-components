@@ -23,6 +23,8 @@ export const useFormManagerState = (props: DFormManagerProps) => {
     const [valuesAsync, setValuesAsync] = useState<any>({});
 
     useEffect(() => {
+        
+        SetSync(false);
 
         const timeOutId = setTimeout(() => setValues(valuesAsync), 500);
 
@@ -35,7 +37,14 @@ export const useFormManagerState = (props: DFormManagerProps) => {
         if (props.getDebugPanel != undefined && typeof (props.getDebugPanel) == 'function')
             props.getDebugPanel(values);
 
+        SetSync(true);
+
     }, [values]);
+
+    const SetSync = (sync: boolean) => {
+        if (props.getIsReady != undefined && typeof (props.getIsReady) == 'function')
+            props.getIsReady(sync);
+    }
 
     useEffect(() => {
 

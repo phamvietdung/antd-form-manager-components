@@ -71,10 +71,12 @@ export const DFormManager = ({
                         if (field.validator == undefined)
                             return Promise.resolve();
 
-                        if (field.validator(getFieldValue(), value))
+                        const [result, message] = field.validator(getFieldValue(), value);
+
+                        if (result)
                             return Promise.resolve();
                         else
-                            return Promise.reject(field.validatorMessage ?? "Validator error!");
+                            return Promise.reject(message??"");
                         //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
                     },
                     //message: field.validatorMessage ?? "Validator error"
@@ -115,7 +117,7 @@ export const DFormManager = ({
                                 // required: "${label} " + (props.options?.rule?.message ?? defaultOptions.rule?.message),
                             }
                         }
-                        // layout={props.options?.layout ?? 'vertical'}
+                        layout={configs.layout}
                         id={formId}
                         ref={formRef}
                         name="control-ref"

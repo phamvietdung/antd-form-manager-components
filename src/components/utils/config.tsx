@@ -8,7 +8,8 @@ export interface IConfig {
     itemClassName: string,
     gutter : number,
     defaultData : object,
-    maxSpan : number
+    maxSpan : number,
+    layout : 'horizontal' | 'vertical' | 'inline'
 }
 
 let configs: IConfig = {
@@ -17,7 +18,8 @@ let configs: IConfig = {
     itemClassName: 'animated-field',
     gutter : 16,
     defaultData : {},
-    maxSpan : 24
+    maxSpan : 24,
+    layout : 'vertical'
 }
 
 export const GetConfig = (): IConfig => {
@@ -40,3 +42,6 @@ export const ConfigureGutter = (gutter: number) => {
     configs.gutter = gutter;
 }
 
+export const ConfigureLayout = (layout : 'horizontal' | 'vertical' | 'inline') => {
+    configs.layout = layout;
+}

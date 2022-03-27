@@ -14,4 +14,6 @@ export type IDataRemote = (search?: string, id?: any, deps?: any, page?: number)
 
 export type IConditionFunction = (obj: Object) => boolean;
 
-export type IConditionWithCurrentValueFunction = (obj: Object, current : any) => boolean;
+//export type IConditionWithCurrentValueFunction = (obj: Object, current : any) => boolean;
+
+export type IConditionWithCurrentValueFunction = (obj: Object, current : any) => [boolean, string];

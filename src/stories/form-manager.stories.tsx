@@ -10,9 +10,11 @@ import zhCN from 'antd/es/locale/zh_CN';
 
 import { Sample1, Sample2 } from './example'
 
-import { Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 
 import { IField } from '../components/interfaces/field';
+
+import { Badge, Card } from 'antd';
 
 const TestComp = (props: { field: IField }) => {
   return (
@@ -40,12 +42,22 @@ const Template: ComponentStory<typeof DFormManager> = (args) => {
 
   const [debug, setDebug] = useState<any>({});
 
+  const [isReady, SetIsReady] = useState<boolean>(true);
+
   return (
     <React.Fragment>
-      <DFormManager
-        getDebugPanel={setDebug}
-        width={600} {...args} />
+      <Badge.Ribbon style={{width : '600'}} text={isReady ? 'Ready' : 'Loading'} color={isReady ? 'green' : 'red'}>
+        <DFormManager
+          getDebugPanel={setDebug}
+          getIsReady={SetIsReady}
+          width={600} {...args} />
+      </Badge.Ribbon>
+
       {JSON.stringify(debug)}
+      {/* <React.Fragment>
+        <Button disabled={!isReady} value='Is Sync?'>{isReady ? 'ready' : 'loading'}</Button>
+      </React.Fragment> */}
+
     </React.Fragment>
   )
 }

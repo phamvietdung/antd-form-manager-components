@@ -13,11 +13,8 @@ export interface DFormManagerProps {
     ref?: any,
     data?: object,
     width?: number,
-    /**
-     * Provide method to export the current values in UI view
-     * 
-     * (values:any) => void
-     * 
-     */
-    getDebugPanel?: (values: any) => void
+    /** Provide method to export the current values in UI view */
+    getDebugPanel?: (values: any) => void,
+    /** Meaning form is ready or not? */
+    getIsReady?: (isReady: boolean) => void
 }
