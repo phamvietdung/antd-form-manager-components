@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import { useFormManagerState } from './hook'
 
@@ -47,10 +47,32 @@ export const DFormManager = ({
 
 
     const onValueChange = (value: Object, values: any) => {
+
+        combineHook(values);
+
         setValuesAsync(values);
     }
 
-    const onFieldChange = (value: Object, values: any) => {
+    const combineHook = (values : any) => {
+        var count = 0;
+
+        for(var i = 0; i < fields.length; i++){
+            if(fields[i].combinable != undefined && typeof(fields[i].combinable) == 'function'){
+                if(values[fields[i].name] != fields[i].combinable(values)){
+                    values[fields[i].name] = fields[i].combinable(values);
+                    count++;
+                }else{
+                    //console.log('not combine change!');
+                }
+               
+            }
+        }
+
+        if(count > 0)
+            formRef.current?.setFieldsValue(values);
+    }
+
+    const onFieldChange = (value: any, values: any) => {
 
     }
 

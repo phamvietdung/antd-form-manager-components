@@ -1,4 +1,4 @@
-import { Col, Typography, Form, Input, InputNumber, DatePicker, Select, Radio } from "antd";
+import { Col, Typography, Form, Input, InputNumber, DatePicker, Select, Radio, CheckboxOptionType } from "antd";
 import React from "react";
 import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../interfaces/field';
 
@@ -73,10 +73,16 @@ export const _RadioItem = React.memo((props: {
             <Form.Item {...formItemInit(field, index)}>
                 <Radio.Group
                     // // style={stylesInit()}
-                    options={[
-                        { label: 'Female', value: 'female' },
-                        { label: 'Male', value: 'male' }
-                    ]}
+                    options={
+                        field.dataSource!.data!.map((select_data: any, select_index: any) : CheckboxOptionType => {
+                            // label :select_data['id'],
+                            // value : select_data['value']
+                            return {
+                                label :select_data['value'],
+                                value : select_data['id']
+                            }
+                        })
+                       }
                     //onChange={this.onChange4}
                     //value={value4}
                     optionType="button"

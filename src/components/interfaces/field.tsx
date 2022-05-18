@@ -47,6 +47,8 @@ interface IFieldCondition {
 
     visible?: IConditionFunction | boolean,
 
+    combinable?: IConditionFunction,
+
     validator?: IConditionWithCurrentValueFunction,
 
     validatorMessage?: string
