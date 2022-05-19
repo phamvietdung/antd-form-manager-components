@@ -4,7 +4,7 @@ import { useFormManagerState } from './hook'
 
 import 'antd/dist/antd.css'
 
-import './styles.css'
+// import './styles.css'
 
 import { Form, Button, ConfigProvider, Row, Col } from "antd";
 
