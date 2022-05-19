@@ -10,56 +10,88 @@ import zhCN from 'antd/es/locale/zh_CN';
 
 import { Sample1, Sample2 } from './example'
 
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Checkbox, Col, Space, Row } from 'antd';
 
 import { IField } from '../components/interfaces/field';
 
 import { Badge, Card } from 'antd';
 
 const TestComp = (props: { field: IField }) => {
-  return (
-    <React.Fragment>
-      <Form.Item name={props.field.name} label={props.field.label} >
-        <Input />
-      </Form.Item >
-      <Form.Item name={'dafuke'} label={props.field.label} >
-        <Input />
-      </Form.Item >
-    </React.Fragment>
+    return (
+        <React.Fragment>
+            <Form.Item name={props.field.name} label={props.field.label} >
+                <Input />
+            </Form.Item >
+            <Form.Item name={'dafuke'} label={props.field.label} >
+                <Input />
+            </Form.Item >
+        </React.Fragment>
 
-  )
+    )
 }
+
+const CheckBox = (props: { field: IField, onchange?: Function }) => {
+    return (
+        <React.Fragment>
+            <Form.Item >
+                <Row>
+                    
+                    <Col span={12}>
+                        {props.field.label}
+                    </Col>
+                    <Col span={12}>
+                        <Checkbox defaultChecked={true} onChange={(e: any) => {
+
+                            var obj = new Object;
+
+                            obj[props.field.name] = e.target.checked;
+
+                            if (props.field.onChange != undefined)
+                                props.onchange(props.field.onChange(obj));
+
+                        }}></Checkbox>
+                    </Col>
+                   
+                </Row>
+
+            </Form.Item>
+
+        </React.Fragment>
+    )
+};
+
+SetPluginComponent('checkbox', CheckBox);
 
 SetPluginComponent('comp', TestComp)
 
 
 export default {
-  title: 'Example/DFormManager',
-  component: DFormManager,
+    title: 'Example/DFormManager',
+    component: DFormManager,
 } as ComponentMeta<typeof DFormManager>;
 
 const Template: ComponentStory<typeof DFormManager> = (args) => {
 
-  const [debug, setDebug] = useState<any>({});
+    const [debug, setDebug] = useState<any>({});
 
-  const [isReady, SetIsReady] = useState<boolean>(true);
+    const [isReady, SetIsReady] = useState<boolean>(true);
 
-  return (
-    <React.Fragment>
-      <Badge.Ribbon style={{width : '600'}} text={isReady ? 'Ready' : 'Loading'} color={isReady ? 'green' : 'red'}>
-        <DFormManager
-          getDebugPanel={setDebug}
-          getIsReady={SetIsReady}
-          width={600} {...args} />
-      </Badge.Ribbon>
+    return (
+        <React.Fragment>
+            <Badge.Ribbon style={{ width: '600' }} text={isReady ? 'Ready' : 'Loading'} color={isReady ? 'green' : 'red'}>
+                <DFormManager
+                    getDebugPanel={setDebug}
+                    getIsReady={SetIsReady}
+                    width={600} {...args} />
+            </Badge.Ribbon>
 
-      {JSON.stringify(debug)}
-      {/* <React.Fragment>
+            {JSON.stringify(debug)}
+            {/* <React.Fragment>
         <Button disabled={!isReady} value='Is Sync?'>{isReady ? 'ready' : 'loading'}</Button>
       </React.Fragment> */}
 
-    </React.Fragment>
-  )
+        </React.Fragment>
+    )
 }
 
 // const simple_form_visible = [
@@ -235,28 +267,29 @@ const Template: ComponentStory<typeof DFormManager> = (args) => {
 
 export const Sample1Setting = Template.bind({});
 Sample1Setting.args = {
-  fields: Sample1,
-  locale: viVn,
-  options: {
-    layout: 'horizontal',
+    fields: Sample1,
+    locale: viVn,
+    options: {
+        layout: 'horizontal',
 
-  },
-  data: {
-    firstName: 'oops'
-  },
-  style: 'default'
+    },
+    data: {
+        firstName: 'oops',
+        isRequired2: true
+    },
+    style: 'default'
 
 };
 
 export const Sample2Setting = Template.bind({});
 Sample2Setting.args = {
-  fields: Sample2,
-  locale: 'en',
-  options: {
-    layout: 'horizontal',
+    fields: Sample2,
+    locale: 'en',
+    options: {
+        layout: 'horizontal',
 
-  },
-  style: 'default'
+    },
+    style: 'default'
 
 };
 

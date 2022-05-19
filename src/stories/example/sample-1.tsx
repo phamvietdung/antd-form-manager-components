@@ -64,12 +64,27 @@ export default [
       ]
     },
     required: true,
-    span: 8
+    span: 24
   },
-
+  {
+    type : 'plugin',
+    pluginName : 'checkbox',
+    label: 'Có phải trường bắt buộc hay không ?',
+    name : 'isRequired',
+    span : 24,
+    onChange : (values : any) => values
+  },
+  {
+    type : 'plugin',
+    pluginName : 'checkbox',
+    label: 'Kiểu hiển thị rút gọn ?',
+    name : 'IsDisplayShortFormat',
+    span : 24,
+    onChange : (values : any) => values
+  },
   {
     type: 'radio',
-    name: 'isRequired',
+    name: 'isRequired2',
     label: 'Có phải trường bắt buộc hay không ?',
     dataSource: {
       data: [

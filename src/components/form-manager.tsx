@@ -6,7 +6,7 @@ import 'antd/dist/antd.css'
 
 import './styles.css'
 
-import { Form, Button, ConfigProvider, Row } from "antd";
+import { Form, Button, ConfigProvider, Row, Col } from "antd";
 
 import { IField, IFieldBase } from './interfaces/field';
 
@@ -38,7 +38,8 @@ export const DFormManager = ({
     const { formId, setFormId,
         formRef, setFormRef,
         fields, setFields,
-        values, setValuesAsync } = useFormManagerState(props);
+        values, setValuesAsync,
+        pluginValues, setPluginValues } = useFormManagerState(props);
 
 
     const { disabledHander,
@@ -48,34 +49,35 @@ export const DFormManager = ({
 
     const onValueChange = (value: Object, values: any) => {
 
+        console.log(values);
+
         combineHook(values);
 
         setValuesAsync(values);
     }
 
-    const combineHook = (values : any) => {
+    const combineHook = (values: any) => {
         var count = 0;
 
-        for(var i = 0; i < fields.length; i++){
-            if(fields[i].combinable != undefined && typeof(fields[i].combinable) == 'function'){
-                if(values[fields[i].name] != fields[i].combinable(values)){
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].combinable != undefined && typeof (fields[i].combinable) == 'function') {
+                if (values[fields[i].name] != fields[i].combinable(values)) {
                     values[fields[i].name] = fields[i].combinable(values);
                     count++;
-                }else{
+                } else {
                     //console.log('not combine change!');
                 }
-               
+
             }
         }
 
-        if(count > 0)
+        if (count > 0)
             formRef.current?.setFieldsValue(values);
     }
 
     const onFieldChange = (value: any, values: any) => {
 
     }
-
 
     const formItemInit = (field: IFieldBase, index: number) => {
         return {
@@ -87,23 +89,23 @@ export const DFormManager = ({
                 //     required: typeof (field.required) == 'boolean' ? field.required : false
 
                 // },
-                ({ getFieldValue }: any) => ({
-                    validator(_: any, value: any) {
+                // ({ getFieldValue }: any) => ({
+                //     validator(_: any, value: any) {
 
-                        if (field.validator == undefined)
-                            return Promise.resolve();
+                //         if (field.validator == undefined)
+                //             return Promise.resolve();
 
-                        const [result, message] = field.validator(getFieldValue(), value);
+                //         const [result, message] = field.validator(getFieldValue(), value);
 
-                        if (result)
-                            return Promise.resolve();
-                        else
-                            return Promise.reject(message??"");
-                        //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
-                    },
-                    //message: field.validatorMessage ?? "Validator error"
-                }),
-                requireRule(field, props)
+                //         if (result)
+                //             return Promise.resolve();
+                //         else
+                //             return Promise.reject(message ?? "");
+                //         //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
+                //     },
+                //     //message: field.validatorMessage ?? "Validator error"
+                // }),
+                requireRule(field, props),
             ],
             required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
@@ -127,6 +129,15 @@ export const DFormManager = ({
             fieldLayoutInit,
             key: `${formId}-${index}`,
         }
+    }
+
+    const onChangePlugin = (onChangeValues: { name: any, value: any }[]) => {
+        //console.clear();
+        //console.log("I GOT IT!");
+        //console.log(pluginValues);
+        //console.log(onChangeValues);
+
+        setPluginValues({ ...pluginValues, ...onChangeValues }); // =)) got got got
     }
 
     return (
@@ -162,7 +173,11 @@ export const DFormManager = ({
                                     case 'select': return <SelectItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'radio': return <RadioItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'editor': return <EditorItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'plugin': return <PluginItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
+                                    case 'plugin':
+                                        return <Col  {...fieldLayoutInit(_field, index)} key={`plugin${formId}-${index}`}>
+                                            <PluginItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} onChange={onChangePlugin} />
+                                        </Col>
+
                                 }
 
                             })

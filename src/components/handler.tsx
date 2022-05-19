@@ -1,7 +1,7 @@
 import { IConditionFunction } from "./interfaces/field-condition";
 
 
-export const useHandler = (formRef : any, values : any) => {
+export const useHandler = (formRef: any, values: any) => {
 
     const disabledHander = (disabled: undefined | boolean | IConditionFunction) => {
         let result = false;
@@ -21,6 +21,8 @@ export const useHandler = (formRef : any, values : any) => {
     }
 
     const requiredHander = (required: undefined | boolean | IConditionFunction) => {
+
+        debugger;
 
         let result = false;
 
@@ -58,9 +60,18 @@ export const useHandler = (formRef : any, values : any) => {
         return result;
     }
 
-    const requireRule = (field : any, props : any) =>  ({ getFieldValue }: any) => ({
+    const requireRule = (field: any, props: any) => ({ getFieldValue }: any) => ({
         validator(_: any, value: any) {
 
+            // validator
+            if (typeof (field.validator) == 'function') {
+                const [result, message] = field.validator(getFieldValue(), value);
+
+                if (!result)
+                    return Promise.reject(message ?? "");
+            }
+
+            // required by function
             if (typeof (field.required) == 'function') {
 
                 let fieldvalues = getFieldValue()
@@ -71,12 +82,24 @@ export const useHandler = (formRef : any, values : any) => {
                     else
                         return Promise.resolve();
             }
-                
+
+            // required by boolean
+            if (typeof (field.required) == 'boolean') {
+
+                let fieldvalues = getFieldValue();
+
+                if (fieldvalues == undefined || fieldvalues[field.name] == undefined || fieldvalues[field.name].trim() == "")
+                    return Promise.reject(`${field.label} ${(props.options?.rule?.message ?? "require rule not correct")}`);
+            }
+
+
+            // pass everything
             return Promise.resolve();
+
         }
     })
 
-   
+
 
     return {
         disabledHander,
