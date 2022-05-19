@@ -1,6 +1,6 @@
 import { Col, Typography, Form, Input, InputNumber } from "antd";
 import React from "react";
-import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../field';
+import { IFieldDateTime, IFieldNumber, IFieldSelect, IField, IFieldBase, IFieldHeading } from '../interfaces/field';
 import { Editor } from "react-draft-wysiwyg";
 import ReactDraftOption from '../react-draft-wysiwyg/options'
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
@@ -11,7 +11,7 @@ export const _EditorItem = React.memo((props: {
     formId: any, field: IField, index: number,
     fieldLayoutInit: Function, formItemInit: Function,
     disabledHander: Function,
-    stylesInit: Function
+    // stylesInit: Function
 }) => {
 
     const formItemEditor = (field: IFieldBase, index: number) => {

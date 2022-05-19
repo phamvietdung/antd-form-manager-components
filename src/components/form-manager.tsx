@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import { useFormManagerState } from './hook'
 
@@ -6,74 +6,78 @@ import 'antd/dist/antd.css'
 
 import './styles.css'
 
-import { Form, Button, ConfigProvider, Row } from "antd";
+import { Form, Button, ConfigProvider, Row, Col } from "antd";
 
-import { IField, IFieldBase } from './field';
-
-import { IFormOptions } from './form-option';
+import { IField, IFieldBase } from './interfaces/field';
 
 import { useHandler } from './handler';
 
-import { SetStyles, GetStyles, GetStyleName, IUIType, GetLocale, SetLocale, ILocale } from './const';
+import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem, PluginItem } from './form-items';
 
-import { HeadingItem, InputItem, PasswordItem, TextareaItem, DatetimeItem, NumberItem, DatetimeItemGroup, SelectItem, RadioItem, EditorItem, PluginItem, SetPluginComponent } from './form-items';
+import { DFormManagerProps } from './interfaces/form'
 
+import { GetConfig } from './utils/config';
 
+const configs = GetConfig();
 
-
-export interface DFormManagerProps {
-    fields: any[],
-    locale?: ILocale,
-    options?: IFormOptions,
-    ref?: any,
-    data?: object,
-    style?: IUIType,
-    width?: number,
-    isDebug?: boolean
-}
-
-const defaultOptions: IFormOptions = {
-    select: {
-        defaultId: "id",
-        defaultLabel: "value"
-    },
-    datetime: {
-
-    },
-    rule: {
-        message: "is required!"
-    },
-    layout: 'vertical'
-}
+/**
+ * Ant[D]esign form manager or called DFormManager is a simple form manager.
+ * 
+ * With some key feature to make you create a from base on ant.design quickly
+ * 
+ * I'll provide gRPC support as soon as posible...
+ * 
+ * @param props DFormManagerProps [https://google.com.vn] 
+ * @returns component
+ */
 
 export const DFormManager = ({
     ...props
 }: DFormManagerProps) => {
 
-    if (props.style != undefined)
-        SetStyles(props.style);
-    if (props.locale != undefined)
-        SetLocale(props.locale);
-
     const { formId, setFormId,
         formRef, setFormRef,
         fields, setFields,
-        values, setValuesAsync } = useFormManagerState(props);
+        values, setValuesAsync,
+        pluginValues, setPluginValues } = useFormManagerState(props);
 
 
     const { disabledHander,
         requiredHander,
         visibleHander, requireRule } = useHandler(formRef, values);
 
+
     const onValueChange = (value: Object, values: any) => {
-        //console.log('change');
+
+        console.log(values);
+
+        combineHook(values);
+
         setValuesAsync(values);
     }
 
-    const onFieldChange = (value: Object, values: any) => {
-        //console.log(value,values)
+    const combineHook = (values: any) => {
+        var count = 0;
+
+        for (var i = 0; i < fields.length; i++) {
+            if (fields[i].combinable != undefined && typeof (fields[i].combinable) == 'function') {
+                if (values[fields[i].name] != fields[i].combinable(values)) {
+                    values[fields[i].name] = fields[i].combinable(values);
+                    count++;
+                } else {
+                    //console.log('not combine change!');
+                }
+
+            }
+        }
+
+        if (count > 0)
+            formRef.current?.setFieldsValue(values);
     }
 
+    const onFieldChange = (value: any, values: any) => {
+
+    }
 
     const formItemInit = (field: IFieldBase, index: number) => {
         return {
@@ -85,105 +89,77 @@ export const DFormManager = ({
                 //     required: typeof (field.required) == 'boolean' ? field.required : false
 
                 // },
-                ({ getFieldValue }: any) => ({
-                    validator(_: any, value: any) {
+                // ({ getFieldValue }: any) => ({
+                //     validator(_: any, value: any) {
 
-                        if (field.validator == undefined)
-                            return Promise.resolve();
+                //         if (field.validator == undefined)
+                //             return Promise.resolve();
 
-                        if (field.validator(getFieldValue(), value))
-                            return Promise.resolve();
-                        else
-                            return Promise.reject(field.validatorMessage ?? "Validator error!");
-                        //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
-                    },
-                    //message: field.validatorMessage ?? "Validator error"
-                }),
-                requireRule(field, props, defaultOptions)
+                //         const [result, message] = field.validator(getFieldValue(), value);
+
+                //         if (result)
+                //             return Promise.resolve();
+                //         else
+                //             return Promise.reject(message ?? "");
+                //         //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
+                //     },
+                //     //message: field.validatorMessage ?? "Validator error"
+                // }),
+                requireRule(field, props),
             ],
             required: requiredHander(field.required),
             hidden: visibleHander(field.visible),
             // disabled: disabledHander(field.disabled), // not working
-            className: 'animated-field'
-        }
-    }
-
-
-
-    const formItemInitDob = (field: IFieldBase, index: number) => {
-        return {
-            name: field.name,
-            label: field.label,
-            rules: [
-                ({ getFieldValue }: any) => ({
-                    validator(_: any, value: any) {
-
-                        if (field.required == true) {
-                            if (value.date == undefined
-                                || value.month == undefined
-                                || value.year == undefined
-                                || value.date.trim() == ""
-                                || value.month.trim() == ""
-                                || value.year.trim() == "")
-                                return Promise.reject(field.validatorMessage ?? "Validator error!");
-                        }
-
-                        if (field.validator == undefined)
-                            return Promise.resolve();
-
-                        if (field.validator(getFieldValue(), value))
-                            return Promise.resolve();
-                        else
-                            return Promise.reject(field.validatorMessage ?? "Validator error!");
-                        //Promise.reject(new Error(field.validatorMessage ?? "Validator error!"));
-                    },
-                    //message: field.validatorMessage ?? "Validator error"
-                })
-            ],
-            // required: requiredHander(field.required),
-            hidden: visibleHander(field.visible),
-            className: 'animated-field'
+            className: configs.itemClassName
         }
     }
 
     const fieldLayoutInit = (field: any, index: number) => {
         return {
             // key: `${formId}-${index}`,
-            span: field.span ?? 24,
+            span: field.span ?? configs.maxSpan,
         }
-    }
-
-    const stylesInit = () => {
-        return GetStyles();
     }
 
     const combineArgFunction = (index: number) => {
         return {
             disabledHander,
             formItemInit,
-            stylesInit,
+            // stylesInit,
             fieldLayoutInit,
             key: `${formId}-${index}`,
         }
     }
 
+    const onChangePlugin = (onChangeValues: { name: any, value: any }[]) => {
+        //console.clear();
+        //console.log("I GOT IT!");
+        //console.log(pluginValues);
+        //console.log(onChangeValues);
+
+        setPluginValues({ ...pluginValues, ...onChangeValues }); // =)) got got got
+    }
+
     return (
         <div style={{ maxWidth: props.width ?? 'auto' }}>
             {formRef != undefined ?
-                <ConfigProvider locale={GetLocale()}>
+                <ConfigProvider locale={props.locale}>
                     <Form
                         validateMessages={
                             {
-                                required: "${label} " + (props.options?.rule?.message ?? defaultOptions.rule?.message),
+                                // required: "${label} " + (props.options?.rule?.message ?? defaultOptions.rule?.message),
                             }
                         }
-                        layout={props.options?.layout ?? 'vertical'}
-                        id={formId} ref={formRef} name="control-ref" initialValues={props.data ?? {}}
+                        layout={configs.layout}
+                        id={formId}
+                        ref={formRef}
+                        name="control-ref"
+                        initialValues={props.data ?? configs.defaultData}
                         onValuesChange={onValueChange}
                         onFieldsChange={onFieldChange}
-                        className={GetStyleName()}
+                        className={configs.className}
                     >
-                        <Row gutter={16}>
+                        <Row gutter={configs.gutter}>
                             {fields.map((_field: IField, index: number) => {
 
                                 switch (_field.type) {
@@ -197,35 +173,17 @@ export const DFormManager = ({
                                     case 'select': return <SelectItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'radio': return <RadioItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
                                     case 'editor': return <EditorItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} />
-                                    case 'plugin' : return <PluginItem field={_field} index={index} formId={formId}/>
+                                    case 'plugin':
+                                        return <Col  {...fieldLayoutInit(_field, index)} key={`plugin${formId}-${index}`}>
+                                            <PluginItem field={_field} index={index} formId={formId} {...combineArgFunction(index)} onChange={onChangePlugin} />
+                                        </Col>
+
                                 }
 
                             })
                             }
                         </Row>
                     </Form>
-                    {
-                        props.isDebug != undefined && props.isDebug == true ?
-                            <React.Fragment>
-                                <React.Fragment>
-                                    <Button onClick={() => {
-                                        formRef.current?.validateFields().then((vls: any) => {
-                                            //console.log(vls);
-                                        }, (err: any) => {
-                                            console.log(err)
-                                        })
-                                    }}>
-                                        Submit
-                                    </Button>
-                                </React.Fragment>
-
-                                <code>
-                                    {JSON.stringify(values)}
-                                </code>
-                            </React.Fragment>
-
-                            : <></>
-                    }
                 </ConfigProvider>
                 : <></>
             }

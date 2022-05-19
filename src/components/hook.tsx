@@ -1,9 +1,16 @@
-import { FormInstance } from "antd";
+import { FormInstance, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { DFormManagerProps } from ".";
-import { NewId } from "./helper";
+import { NewId } from "./utils/helper";
 
-export const useFormManagerState = (props : DFormManagerProps) => {
+const { Text, Link } = Typography;
+
+/**
+ * Provide hook
+ * @param props 
+ * @returns 
+ */
+export const useFormManagerState = (props: DFormManagerProps) => {
 
     const [formId, setFormId] = useState<string>("");
 
@@ -13,22 +20,39 @@ export const useFormManagerState = (props : DFormManagerProps) => {
 
     const [values, setValues] = useState<any>({});
 
+    const [pluginValues, setPluginValues] = useState<any>({});
+
     const [valuesAsync, setValuesAsync] = useState<any>({});
 
     useEffect(() => {
 
-        const timeOutId = setTimeout(() => setValues(valuesAsync), 500);
+        SetSync(false);
+
+        const timeOutId = setTimeout(() => {
+
+            console.clear();
+            console.log(valuesAsync, pluginValues);
+
+            return setValues({ ...valuesAsync, ...pluginValues });
+        }, 500);
 
         return () => clearTimeout(timeOutId);
 
-    },[valuesAsync]);
+    }, [valuesAsync, pluginValues]);
 
 
     useEffect(() => {
+        if (props.getDebugPanel != undefined && typeof (props.getDebugPanel) == 'function')
+            props.getDebugPanel(values);
 
-        //console.log(values);
+        SetSync(true);
 
-    },[values]);
+    }, [values]);
+
+    const SetSync = (sync: boolean) => {
+        if (props.getIsReady != undefined && typeof (props.getIsReady) == 'function')
+            props.getIsReady(sync);
+    }
 
     useEffect(() => {
 
@@ -40,7 +64,7 @@ export const useFormManagerState = (props : DFormManagerProps) => {
             setFormRef(props.ref);
         }
 
-        if(props.data !=undefined)
+        if (props.data != undefined)
             setValuesAsync(props.data);
 
     }, []);
@@ -63,7 +87,8 @@ export const useFormManagerState = (props : DFormManagerProps) => {
         formId, setFormId,
         formRef, setFormRef,
         fields, setFields,
-        values, setValuesAsync
+        values, setValuesAsync,
+        pluginValues, setPluginValues
     }
 
 }

@@ -15,6 +15,7 @@
  * @property {string} selectMultiple
  * @property {string} hidden
  * @property {string} multipleValue
+ * @property {string} plugin - add/custom your component
  *
  */
 export type IFieldType = 'input' | 'password' | 'textarea' | 'autoComplete' | 'editor'
