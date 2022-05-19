@@ -2,23 +2,30 @@ import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
 
+import { DFormManager, SetPluginComponent, DFormManagerProps } from './components';
+
+import { Divider, Typography } from 'antd';
+
+const { Title, Text, Link } = Typography;
+
+const fields : any[] = [
+
+  {
+      type: 'heading',
+      label: <>
+        <Title level={3}>Tạo trường</Title>
+        <Text>Điền các thông tin bên dưới để tạo trường tùy chỉnh.</Text>
+        <Divider />
+      </>,
+    },
+]
+
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+       <DFormManager
+                    width={600} 
+                    fields={fields} />
     </div>
   );
 }

@@ -1,6 +1,8 @@
 import { Rule } from "antd/lib/form";
 
-import { IConditionFunction, IConditionWithCurrentValueFunction, IDataSource } from "./field-condition";
+import { IConditionFunction, IConditionWithCurrentValueFunction } from "./field-condition";
+
+import type {IDataSource} from "./field-condition";
 
 import { IFieldType } from "./field-type";
 

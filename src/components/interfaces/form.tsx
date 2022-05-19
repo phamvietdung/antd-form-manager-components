@@ -6,7 +6,7 @@ import { Locale } from 'antd/lib/locale-provider';
 
 export type DebugPanel = () => JSX.Element;
 
-export interface DFormManagerProps {
+export type DFormManagerProps = {
     fields: any[],
     locale?: Locale,
     // options?: IFormOptions,

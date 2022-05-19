@@ -1,4 +1,4 @@
-export interface IDataSource {
+export type IDataSource = {
     id?: string,
     label?: string,
     labelDetail?: string,
